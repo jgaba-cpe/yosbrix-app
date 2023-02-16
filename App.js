@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hi Mom!</Text>
+      <Text>Hi Mom and Dad!</Text>
       <StatusBar style="auto" />
     </View>
   );
