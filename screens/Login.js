@@ -2,23 +2,39 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
+  Platform,
+  Image,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
+// utilities
 import { colors } from "../utilities/Colors";
+import KeyboardAvoidingWrapper from "../utilities/KeyboardAvoidingWrapper";
+import {
+  screenWidth,
+  screenHeight,
+  statusBarHeight,
+} from "../utilities/LayoutTools";
 
 const Login = () => {
+  if (Platform.OS === "ios") {
+    console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
+  } else {
+    console.log(`Android | Width: ${screenWidth}, Height: ${screenHeight}`);
+  }
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? -150 : -160}
-      style={styles.container}
-    >
-      <SafeAreaView>
-        <View style={styles.banner}></View>
+    <KeyboardAvoidingWrapper>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
+        <View style={styles.banner}>
+          <Image
+            style={styles.logo}
+            source={require("../assets/logo/YosBrix.png")}
+          />
+        </View>
         <View style={styles.form}>
           <TextInput
             style={styles.input}
@@ -41,8 +57,8 @@ const Login = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </View>
+    </KeyboardAvoidingWrapper>
   );
 };
 
@@ -52,16 +68,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.tertiary,
+    marginTop: statusBarHeight,
   },
   banner: {
-    height: "30%",
+    // height: 240,
+    height: screenHeight * 0.3,
+    // height: "30%",
     width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.white,
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
+    // borderWidth: 0.5,
+  },
+  logo: {
+    height: "48.33%",
+    width: "39.44%",
+    resizeMode: "contain",
   },
   form: {
-    height: "70%",
+    // height: 560,
+    height: screenHeight * 0.7,
+    // height: "70%",
     width: "100%",
     marginTop: "17.143%",
     alignItems: "center",
