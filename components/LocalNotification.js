@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Button, LogBox } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 import { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
@@ -40,8 +40,6 @@ const LocalNotification = () => {
       },
     });
   };
-
-  LogBox.ignoreLogs(["expo-permissions is now deprecated"]);
 
   return (
     <View style={styles.container}>

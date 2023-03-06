@@ -11,4 +11,5 @@ export const colors = {
   black25: "#A9A7A7",
   black10: "#C2C2C2",
   black5: "#CACACA",
+  primary80: "#AF6557",
 };

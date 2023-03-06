@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
+import { useNavigation } from "@react-navigation/native";
 
 // utilities
 import { colors } from "../utilities/Colors";
@@ -17,13 +20,27 @@ import {
   screenHeight,
   statusBarHeight,
 } from "../utilities/LayoutTools";
+import { useState } from "react";
 
 const Register = () => {
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigation = useNavigation();
+
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
   } else {
     console.log(`Android | Width: ${screenWidth}, Height: ${screenHeight}`);
   }
+
+  let [fontsLoaded] = useFonts({
+    LatoLight: require("../assets/fonts/Lato-Light.ttf"),
+    LatoRegular: require("../assets/fonts/Lato-Regular.ttf"),
+    LatoBold: require("../assets/fonts/Lato-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) return null;
 
   return (
     <KeyboardAvoidingWrapper>
@@ -36,6 +53,11 @@ const Register = () => {
           />
         </View>
         <View style={styles.form}>
+          {isError && (
+            <View style={styles.errorMsgBox}>
+              <Text style={styles.errorText}>Please input valid email.</Text>
+            </View>
+          )}
           <TextInput
             style={styles.input}
             placeholder="Display Name"
@@ -52,12 +74,16 @@ const Register = () => {
             placeholderTextColor={colors.black50}
             secureTextEntry
           />
-          <TouchableOpacity style={styles.button}>
+          {!isLoading && (<TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>REGISTER</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>)}
+          {isLoading && (<TouchableOpacity style={styles.buttonIsLoading}>
+            <ActivityIndicator size="small" color={colors.white} />
+            <Text style={styles.buttonTextIsLoading}>REGISTER</Text>
+          </TouchableOpacity>)}
           <View style={styles.linkContainer}>
             <Text style={styles.normalText}>Already have an account? </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={styles.linkText}>Login</Text>
             </TouchableOpacity>
           </View>
@@ -101,6 +127,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // borderWidth: 0.5,
   },
+  errorMsgBox: {
+    height: "5.71%",
+    width: "80%",
+    marginBottom: "4.29%",
+    paddingLeft: "3.47%",
+    borderRadius: 8,
+    backgroundColor: colors.errorBackground,
+    borderColor: colors.errorBorder,
+    borderWidth: 1,
+    justifyContent: "center",
+  },
+  errorText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black50,
+  },
   input: {
     height: "7.143%",
     width: "80%",
@@ -110,6 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.secondary,
     borderWidth: 1,
+    fontFamily: "LatoRegular",
     fontSize: 13,
   },
   button: {
@@ -125,8 +168,28 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.white,
+    fontFamily: "LatoBold",
     fontSize: 20,
-    letterSpacing: 1,
+    letterSpacing: 3,
+  },
+  buttonIsLoading: {
+    height: "7.143%",
+    width: "80%",
+    marginBottom: "4.29%",
+    borderRadius: 8,
+    backgroundColor: colors.primary80,
+    borderColor: colors.white,
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonTextIsLoading: {
+    color: colors.white,
+    fontFamily: "LatoBold",
+    fontSize: 20,
+    letterSpacing: 3,
+    marginLeft: "2.78%",
   },
   linkContainer: {
     flexDirection: "row",
@@ -134,10 +197,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   normalText: {
+    fontFamily: "LatoRegular",
     fontSize: 16,
     color: colors.black50,
   },
   linkText: {
+    fontFamily: "LatoRegular",
     fontSize: 16,
     color: colors.secondary,
   },
