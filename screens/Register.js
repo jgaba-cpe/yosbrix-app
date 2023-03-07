@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   View,
   Text,
@@ -20,7 +21,6 @@ import {
   screenHeight,
   statusBarHeight,
 } from "../utilities/LayoutTools";
-import { useState } from "react";
 
 const Register = () => {
   const [isError, setIsError] = useState(false);
@@ -62,11 +62,13 @@ const Register = () => {
             style={styles.input}
             placeholder="Display Name"
             placeholderTextColor={colors.black50}
+            autoCapitalize="words"
           />
           <TextInput
             style={styles.input}
             placeholder="Email"
             placeholderTextColor={colors.black50}
+            keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
@@ -74,13 +76,17 @@ const Register = () => {
             placeholderTextColor={colors.black50}
             secureTextEntry
           />
-          {!isLoading && (<TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>REGISTER</Text>
-          </TouchableOpacity>)}
-          {isLoading && (<TouchableOpacity style={styles.buttonIsLoading}>
-            <ActivityIndicator size="small" color={colors.white} />
-            <Text style={styles.buttonTextIsLoading}>REGISTER</Text>
-          </TouchableOpacity>)}
+          {!isLoading && (
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>REGISTER</Text>
+            </TouchableOpacity>
+          )}
+          {isLoading && (
+            <TouchableOpacity style={styles.buttonIsLoading}>
+              <ActivityIndicator size="small" color={colors.white} />
+              <Text style={styles.buttonTextIsLoading}>REGISTER</Text>
+            </TouchableOpacity>
+          )}
           <View style={styles.linkContainer}>
             <Text style={styles.normalText}>Already have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Login")}>
@@ -112,6 +118,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     // borderWidth: 0.5,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 4,
   },
   logo: {
     height: "48.33%",

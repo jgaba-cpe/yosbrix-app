@@ -10,7 +10,7 @@ import { colors } from "./Colors";
 const KeyboardAvoidingWrapper = ({ children }) => {
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: colors.tertiary }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView>

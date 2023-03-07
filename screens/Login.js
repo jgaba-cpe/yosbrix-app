@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   View,
   Text,
@@ -20,9 +21,8 @@ import {
   screenHeight,
   statusBarHeight,
 } from "../utilities/LayoutTools";
-import { useState } from "react";
 
-const Register = () => {
+const Login = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,6 +62,7 @@ const Register = () => {
             style={styles.input}
             placeholder="Email"
             placeholderTextColor={colors.black50}
+            keyboardType="email-address"
           />
           <TextInput
             style={styles.input}
@@ -92,7 +93,7 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
@@ -111,6 +112,14 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     // borderWidth: 0.5,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 4,
   },
   logo: {
     height: "48.33%",
