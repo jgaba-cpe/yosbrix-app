@@ -25,6 +25,8 @@ import {
 const Login = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailIsFocused, setEmailIsFocused] = useState(false);
+  const [passwordIsFocused, setPasswordIsFocused] = useState(false);
 
   const navigation = useNavigation();
 
@@ -59,16 +61,36 @@ const Login = () => {
             </View>
           )}
           <TextInput
-            style={styles.input}
+            style={
+              emailIsFocused
+                ? [styles.input, { borderColor: colors.secondary }]
+                : styles.input
+            }
             placeholder="Email"
             placeholderTextColor={colors.black50}
             keyboardType="email-address"
+            onFocus={() => {
+              setEmailIsFocused(true);
+            }}
+            onBlur={() => {
+              setEmailIsFocused(false);
+            }}
           />
           <TextInput
-            style={styles.input}
+            style={
+              passwordIsFocused
+                ? [styles.input, { borderColor: colors.secondary }]
+                : styles.input
+            }
             placeholder="Password"
             placeholderTextColor={colors.black50}
             secureTextEntry
+            onFocus={() => {
+              setPasswordIsFocused(true);
+            }}
+            onBlur={() => {
+              setPasswordIsFocused(false);
+            }}
           />
           {!isLoading && (
             <TouchableOpacity style={styles.button}>
@@ -158,7 +180,7 @@ const styles = StyleSheet.create({
     paddingLeft: "3.47%",
     borderRadius: 8,
     backgroundColor: colors.white,
-    borderColor: colors.secondary,
+    borderColor: colors.white,
     borderWidth: 1,
     fontFamily: "LatoRegular",
     fontSize: 13,
