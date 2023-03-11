@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import { colors } from "../utilities/Colors";
 
-const CustomTextInput = ({ placeholder, keyboardType, secureTextEntry, onUserInput }) => {
+const CustomTextInput = ({
+  placeholder,
+  keyboardType,
+  secureTextEntry,
+  onUserInput,
+}) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [textInputValue, setTextInputValue] = useState('');
 
   const handleTextInputChange = (text) => {
-    setTextInputValue(text);
-    console.log(`On CustomTextInput: ${text}`)
-    onUserInput(text);    
-  }
+    onUserInput(text);
+  };
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -33,7 +35,7 @@ const CustomTextInput = ({ placeholder, keyboardType, secureTextEntry, onUserInp
       secureTextEntry={secureTextEntry}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      onChangeText={(handleTextInputChange)}
+      onChangeText={handleTextInputChange}
     />
   );
 };
