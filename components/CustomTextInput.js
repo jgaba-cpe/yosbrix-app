@@ -4,6 +4,7 @@ import { colors } from "../utilities/Colors";
 
 const CustomTextInput = ({
   placeholder,
+  autoCapitalize,
   keyboardType,
   secureTextEntry,
   onUserInput,
@@ -31,6 +32,7 @@ const CustomTextInput = ({
       }
       placeholder={placeholder}
       placeholderTextColor={colors.black50}
+      autoCapitalize={autoCapitalize}
       keyboardType={keyboardType}
       secureTextEntry={secureTextEntry}
       onFocus={handleFocus}

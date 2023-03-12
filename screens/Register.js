@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   Platform,
   Image,
@@ -12,6 +11,9 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+
+// components
+import CustomTextInput from "../components/CustomTextInput";
 
 // utilities
 import { colors } from "../utilities/Colors";
@@ -26,8 +28,27 @@ const Register = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [displayNameIsFocused, setDisplayNameIsFocused] = useState(false);
-  const [emailIsFocused, setEmailIsFocused] = useState(false);
-  const [passwordIsFocused, setPasswordIsFocused] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleDisplayNameInput = (userInput) => {
+    setDisplayName(userInput);
+  };
+
+  const handleEmailInput = (userInput) => {
+    setEmail(userInput);
+  };
+
+  const handlePasswordInput = (userInput) => {
+    setPassword(userInput);
+  };
+
+  const handleSubmit = () => {
+    console.log(
+      `Display Name: ${displayName} Email: ${email}, Password: ${password}`
+    );
+  };
 
   const navigation = useNavigation();
 
@@ -61,56 +82,23 @@ const Register = () => {
               <Text style={styles.errorText}>Please input valid email.</Text>
             </View>
           )}
-          <TextInput
-            style={
-              displayNameIsFocused
-                ? [styles.input, { borderColor: colors.secondary }]
-                : styles.input
-            }
-            placeholder="Display Name"
-            placeholderTextColor={colors.black50}
-            autoCapitalize="words"
-            onFocus={() => {
-              setDisplayNameIsFocused(true);
-            }}
-            onBlur={() => {
-              setDisplayNameIsFocused(false);
-            }}
+          <CustomTextInput
+            placeholder={"Display Name"}
+            autoCapitalize={"words"}
+            onUserInput={handleDisplayNameInput}
           />
-          <TextInput
-            style={
-              emailIsFocused
-                ? [styles.input, { borderColor: colors.secondary }]
-                : styles.input
-            }
-            placeholder="Email"
-            placeholderTextColor={colors.black50}
-            keyboardType="email-address"
-            onFocus={() => {
-              setEmailIsFocused(true);
-            }}
-            onBlur={() => {
-              setEmailIsFocused(false);
-            }}
+          <CustomTextInput
+            placeholder={"Email"}
+            keyboardType={"email-address"}
+            onUserInput={handleEmailInput}
           />
-          <TextInput
-            style={
-              passwordIsFocused
-                ? [styles.input, { borderColor: colors.secondary }]
-                : styles.input
-            }
-            placeholder="Password"
-            placeholderTextColor={colors.black50}
-            secureTextEntry
-            onFocus={() => {
-              setPasswordIsFocused(true);
-            }}
-            onBlur={() => {
-              setPasswordIsFocused(false);
-            }}
+          <CustomTextInput
+            placeholder={"Password"}
+            secureTextEntry={true}
+            onUserInput={handlePasswordInput}
           />
           {!isLoading && (
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>REGISTER</Text>
             </TouchableOpacity>
           )}
@@ -189,18 +177,6 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 13,
     color: colors.black50,
-  },
-  input: {
-    height: "7.143%",
-    width: "80%",
-    marginBottom: "4.29%",
-    paddingLeft: "3.47%",
-    borderRadius: 8,
-    backgroundColor: colors.white,
-    borderColor: colors.white,
-    borderWidth: 1,
-    fontFamily: "LatoRegular",
-    fontSize: 13,
   },
   button: {
     height: "7.143%",

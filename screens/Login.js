@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   Platform,
   Image,
@@ -12,6 +11,9 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+
+// components
+import CustomTextInput from "../components/CustomTextInput";
 
 // utilities
 import { colors } from "../utilities/Colors";
@@ -25,8 +27,20 @@ import {
 const Login = () => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [emailIsFocused, setEmailIsFocused] = useState(false);
-  const [passwordIsFocused, setPasswordIsFocused] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleEmailInput = (userInput) => {
+    setEmail(userInput);
+  };
+
+  const handlePasswordInput = (userInput) => {
+    setPassword(userInput);
+  };
+
+  const handleSubmit = () => {
+    console.log(`Email: ${email}, Password: ${password}`);
+  };
 
   const navigation = useNavigation();
 
@@ -60,40 +74,18 @@ const Login = () => {
               <Text style={styles.errorText}>Invalid credentials.</Text>
             </View>
           )}
-          <TextInput
-            style={
-              emailIsFocused
-                ? [styles.input, { borderColor: colors.secondary }]
-                : styles.input
-            }
-            placeholder="Email"
-            placeholderTextColor={colors.black50}
-            keyboardType="email-address"
-            onFocus={() => {
-              setEmailIsFocused(true);
-            }}
-            onBlur={() => {
-              setEmailIsFocused(false);
-            }}
+          <CustomTextInput
+            placeholder={"Email"}
+            keyboardType={"email-address"}
+            onUserInput={handleEmailInput}
           />
-          <TextInput
-            style={
-              passwordIsFocused
-                ? [styles.input, { borderColor: colors.secondary }]
-                : styles.input
-            }
-            placeholder="Password"
-            placeholderTextColor={colors.black50}
-            secureTextEntry
-            onFocus={() => {
-              setPasswordIsFocused(true);
-            }}
-            onBlur={() => {
-              setPasswordIsFocused(false);
-            }}
+          <CustomTextInput
+            placeholder={"Password"}
+            secureTextEntry={true}
+            onUserInput={handlePasswordInput}
           />
           {!isLoading && (
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>LOGIN</Text>
             </TouchableOpacity>
           )}
@@ -172,18 +164,6 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 13,
     color: colors.black50,
-  },
-  input: {
-    height: "7.143%",
-    width: "80%",
-    marginBottom: "4.29%",
-    paddingLeft: "3.47%",
-    borderRadius: 8,
-    backgroundColor: colors.white,
-    borderColor: colors.white,
-    borderWidth: 1,
-    fontFamily: "LatoRegular",
-    fontSize: 13,
   },
   button: {
     height: "7.143%",

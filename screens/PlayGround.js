@@ -12,6 +12,9 @@ import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 
+// components
+import CustomTextInput from "../components/CustomTextInput";
+
 // utilities
 import { colors } from "../utilities/Colors";
 import KeyboardAvoidingWrapper from "../utilities/KeyboardAvoidingWrapper";
@@ -20,7 +23,6 @@ import {
   screenHeight,
   statusBarHeight,
 } from "../utilities/LayoutTools";
-import CustomTextInput from "../components/CustomTextInput";
 
 const PlayGround = () => {
   const [isError, setIsError] = useState(false);
@@ -162,18 +164,6 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 13,
     color: colors.black50,
-  },
-  input: {
-    height: "7.143%",
-    width: "80%",
-    marginBottom: "4.29%",
-    paddingLeft: "3.47%",
-    borderRadius: 8,
-    backgroundColor: colors.white,
-    borderColor: colors.white,
-    borderWidth: 1,
-    fontFamily: "LatoRegular",
-    fontSize: 13,
   },
   button: {
     height: "7.143%",
