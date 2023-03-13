@@ -7,10 +7,15 @@ import {
   Platform,
   Image,
   ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+
+// hooks
+import { useLogin } from "../hooks/useLogin";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 // components
 import CustomTextInput from "../components/CustomTextInput";
@@ -25,10 +30,14 @@ import {
 } from "../utilities/LayoutTools";
 
 const Login = () => {
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { login, isPending, error } = useLogin();
+
+  const { user } = useAuthContext();
+
+  const navigation = useNavigation();
 
   const handleEmailInput = (userInput) => {
     setEmail(userInput);
@@ -39,10 +48,13 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
-    console.log(`Email: ${email}, Password: ${password}`);
+    Keyboard.dismiss();
+    login(email, password);
   };
 
-  const navigation = useNavigation();
+  if (user) {
+    navigation.replace("Dashboard");
+  }
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -69,7 +81,7 @@ const Login = () => {
           />
         </View>
         <View style={styles.form}>
-          {isError && (
+          {error && (
             <View style={styles.errorMsgBox}>
               <Text style={styles.errorText}>Invalid credentials.</Text>
             </View>
@@ -84,12 +96,12 @@ const Login = () => {
             secureTextEntry={true}
             onUserInput={handlePasswordInput}
           />
-          {!isLoading && (
+          {!isPending && (
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>LOGIN</Text>
             </TouchableOpacity>
           )}
-          {isLoading && (
+          {isPending && (
             <TouchableOpacity style={styles.buttonIsLoading}>
               <ActivityIndicator size="small" color={colors.white} />
               <Text style={styles.buttonTextIsLoading}>LOGIN</Text>

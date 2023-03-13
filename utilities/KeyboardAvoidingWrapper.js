@@ -5,8 +5,6 @@ import {
   Keyboard,
 } from "react-native";
 
-import { colors } from "./Colors";
-
 const KeyboardAvoidingWrapper = ({ children }) => {
   return (
     <KeyboardAvoidingView

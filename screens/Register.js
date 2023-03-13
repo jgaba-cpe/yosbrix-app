@@ -7,10 +7,15 @@ import {
   Platform,
   Image,
   ActivityIndicator,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
+
+// hooks
+import { useSignup } from "../hooks/useSignup";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 // components
 import CustomTextInput from "../components/CustomTextInput";
@@ -25,12 +30,15 @@ import {
 } from "../utilities/LayoutTools";
 
 const Register = () => {
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [displayNameIsFocused, setDisplayNameIsFocused] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { signup, isPending, error } = useSignup();
+
+  const { user } = useAuthContext();
+
+  const navigation = useNavigation();
 
   const handleDisplayNameInput = (userInput) => {
     setDisplayName(userInput);
@@ -45,12 +53,13 @@ const Register = () => {
   };
 
   const handleSubmit = () => {
-    console.log(
-      `Display Name: ${displayName} Email: ${email}, Password: ${password}`
-    );
+    Keyboard.dismiss();
+    signup(email, password, displayName);
   };
 
-  const navigation = useNavigation();
+  if (user) {
+    navigation.replace("Dashboard");
+  }
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -77,7 +86,7 @@ const Register = () => {
           />
         </View>
         <View style={styles.form}>
-          {isError && (
+          {error && (
             <View style={styles.errorMsgBox}>
               <Text style={styles.errorText}>Please input valid email.</Text>
             </View>
@@ -97,12 +106,12 @@ const Register = () => {
             secureTextEntry={true}
             onUserInput={handlePasswordInput}
           />
-          {!isLoading && (
+          {!isPending && (
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>REGISTER</Text>
             </TouchableOpacity>
           )}
-          {isLoading && (
+          {isPending && (
             <TouchableOpacity style={styles.buttonIsLoading}>
               <ActivityIndicator size="small" color={colors.white} />
               <Text style={styles.buttonTextIsLoading}>REGISTER</Text>
