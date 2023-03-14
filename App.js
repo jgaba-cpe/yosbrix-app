@@ -14,9 +14,6 @@ const Stack = createStackNavigator();
 
 LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core"]);
 LogBox.ignoreLogs(["expo-permissions is now deprecated"]);
-LogBox.ignoreLogs([
-  "Cannot update a component (`ForwardRef(BaseNavigationContainer)`)",
-]);
 
 export default function App() {
   return (

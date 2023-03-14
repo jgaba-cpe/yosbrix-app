@@ -3,7 +3,7 @@ import React from "react";
 
 const BrickDetails = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>BrickDetails</Text>
     </View>
   );
@@ -11,4 +11,10 @@ const BrickDetails = () => {
 
 export default BrickDetails;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

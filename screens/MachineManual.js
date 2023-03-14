@@ -3,7 +3,7 @@ import React from "react";
 
 const MachineManual = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>MachineManual</Text>
     </View>
   );
@@ -11,4 +11,11 @@ const MachineManual = () => {
 
 export default MachineManual;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+

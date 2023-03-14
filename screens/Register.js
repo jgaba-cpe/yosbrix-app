@@ -1,4 +1,5 @@
-import { useState } from "react";
+// layout
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,11 +12,15 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+
+// navigation
 import { useNavigation } from "@react-navigation/native";
 
-// hooks
+// firebase config
+import { auth } from "../firebase/config";
+
+// firebase hooks
 import { useSignup } from "../hooks/useSignup";
-import { useAuthContext } from "../hooks/useAuthContext";
 
 // components
 import CustomTextInput from "../components/CustomTextInput";
@@ -29,14 +34,22 @@ import {
   statusBarHeight,
 } from "../utilities/LayoutTools";
 
+// ------------------------- MAIN CODE ------------------------- //
 const Register = () => {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signup, isPending, error } = useSignup();
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Dashboard");
+      }
+      unsub();
+    });
+  }, []);
 
-  const { user } = useAuthContext();
+  const { signup, isPending, error } = useSignup();
 
   const navigation = useNavigation();
 
@@ -56,10 +69,6 @@ const Register = () => {
     Keyboard.dismiss();
     signup(email, password, displayName);
   };
-
-  if (user) {
-    navigation.replace("Dashboard");
-  }
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -131,6 +140,7 @@ const Register = () => {
 
 export default Register;
 
+// ------------------------- STYLES ------------------------- //
 const styles = StyleSheet.create({
   container: {
     flex: 1,

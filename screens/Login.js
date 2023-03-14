@@ -1,4 +1,5 @@
-import { useState } from "react";
+// layout
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,11 +12,15 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+
+// navigation
 import { useNavigation } from "@react-navigation/native";
 
-// hooks
+// firebase config
+import { auth } from "../firebase/config";
+
+// firebase hooks
 import { useLogin } from "../hooks/useLogin";
-import { useAuthContext } from "../hooks/useAuthContext";
 
 // components
 import CustomTextInput from "../components/CustomTextInput";
@@ -29,13 +34,21 @@ import {
   statusBarHeight,
 } from "../utilities/LayoutTools";
 
+// ------------------------- MAIN CODE ------------------------- //
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { login, isPending, error } = useLogin();
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Dashboard");
+      }
+      unsub();
+    });
+  }, []);
 
-  const { user } = useAuthContext();
+  const { login, isPending, error } = useLogin();
 
   const navigation = useNavigation();
 
@@ -51,10 +64,6 @@ const Login = () => {
     Keyboard.dismiss();
     login(email, password);
   };
-
-  if (user) {
-    navigation.replace("Dashboard");
-  }
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -121,6 +130,7 @@ const Login = () => {
 
 export default Login;
 
+// ------------------------- STYLES ------------------------- //
 const styles = StyleSheet.create({
   container: {
     flex: 1,
