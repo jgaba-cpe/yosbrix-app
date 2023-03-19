@@ -34,23 +34,28 @@ import {
   statusBarHeight,
 } from "../utilities/LayoutTools";
 
+// assets
+import {
+  yosbrix
+} from "../assets/index";
+
 // ------------------------- MAIN CODE ------------------------- //
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.replace("Dashboard");
       }
-      unsub();
     });
+    return unsub;
   }, []);
 
   const { login, isPending, error } = useLogin();
-
-  const navigation = useNavigation();
 
   const handleEmailInput = (userInput) => {
     setEmail(userInput);
@@ -82,11 +87,14 @@ const Login = () => {
   return (
     <KeyboardAvoidingWrapper>
       <View style={styles.container}>
-        <StatusBar style="dark" />
+        {Platform.OS === "android" && (
+          <StatusBar style="dark" backgroundColor={colors.white} />
+        )}
+        {Platform.OS === "ios" && <StatusBar style="dark" />}
         <View style={styles.banner}>
           <Image
             style={styles.logo}
-            source={require("../assets/logo/YosBrix.png")}
+            source={yosbrix}
           />
         </View>
         <View style={styles.form}>

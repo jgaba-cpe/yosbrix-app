@@ -12,4 +12,7 @@ export const colors = {
   black10: "#C2C2C2",
   black5: "#CACACA",
   primary80: "#AF6557",
+  titles: "#3D3535",
+  tempColor: "#E9D1C4",
+  tempText: "#EB7245",
 };
