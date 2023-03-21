@@ -101,7 +101,7 @@ const Weather = () => {
         <Text style={styles.txtTitle}>Weather Today</Text>
       </View>
       <View style={styles.weatherContainer}>
-        {weatherData ? (
+        {!loading ? (
           <>
             <Text style={styles.city}>{weatherData?.name}, PH</Text>
             <Text style={styles.temp}>
@@ -128,7 +128,7 @@ const Weather = () => {
       </View>
       <View style={styles.featureContainer}>
         <View style={styles.rowContainer}>
-          {weatherData ? (
+          {!loading ? (
             <>
               <Text style={styles.txtFeaturesTitle}> Wind Status</Text>
               <Image style={styles.imgWeather} source={windIcon} />
@@ -141,7 +141,7 @@ const Weather = () => {
           )}
         </View>
         <View style={styles.rowContainer}>
-          {weatherData ? (
+          {!loading ? (
             <>
               <Text style={styles.txtFeaturesTitle}> Humidity</Text>
               <Image style={styles.imgWeather} source={humidityIcon} />
@@ -156,7 +156,7 @@ const Weather = () => {
       </View>
       <View style={styles.featureContainer}>
         <View style={styles.rowContainer}>
-          {weatherData ? (
+          {!loading ? (
             <>
               <Text style={styles.txtFeaturesTitle}> Air Pressure</Text>
               <Image style={styles.imgWeather} source={airPressureIcon} />
@@ -169,7 +169,7 @@ const Weather = () => {
           )}
         </View>
         <View style={styles.rowContainer}>
-          {weatherData ? (
+          {!loading ? (
             <>
               <Text style={styles.txtFeaturesTitle}> Visibility</Text>
               <Image style={styles.imgWeather} source={visibilityIcon} />

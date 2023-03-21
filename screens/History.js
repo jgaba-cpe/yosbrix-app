@@ -86,7 +86,6 @@ const History = () => {
           style={styles.hamburgerMenuIcon}
         />
       </TouchableOpacity>
-      <StatusBar style="dark" />
       <View style={styles.banner}>
         <Text style={styles.txtTitle}>History</Text>
       </View>

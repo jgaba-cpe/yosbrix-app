@@ -17,7 +17,7 @@
     "expo": "~47.0.12",
     "expo-device": "~5.0.0",
     "expo-font": "~11.0.1",
-    "expo-location": "^15.1.1",
+    "expo-location": "~15.0.1",
     "expo-notifications": "~0.17.0",
     "expo-permissions": "~14.0.0",
     "expo-status-bar": "~1.4.2",

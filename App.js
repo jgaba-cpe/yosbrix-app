@@ -8,7 +8,6 @@ LogBox.ignoreLogs(["expo-permissions is now deprecated"]);
 LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate`"]);
 
 export default function App() {
-
   return (
     <AuthContextProvider>
       <AppNavigation />

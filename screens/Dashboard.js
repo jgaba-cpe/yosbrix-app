@@ -78,35 +78,11 @@ const Dashboard = () => {
       });
   }, []);
 
-  const shreddingIsFinishedNotif = () => {
+  const showNotif = (body) => {
     Notifications.scheduleNotificationAsync({
       content: {
         title: "YosBrix",
-        body: "Shredding is finished!",
-      },
-      trigger: {
-        seconds: 1,
-      },
-    });
-  };
-
-  const mixingIsFinishedNotif = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "YosBrix",
-        body: "Mixing is finished!",
-      },
-      trigger: {
-        seconds: 1,
-      },
-    });
-  };
-
-  const moldingIsFinishedNotif = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "YosBrix",
-        body: "Molding is finished!",
+        body: body,
       },
       trigger: {
         seconds: 1,
@@ -177,15 +153,15 @@ const Dashboard = () => {
   // Algo
   useEffect(() => {
     if (currentProcess === "Mixing") {
-      shreddingIsFinishedNotif();
+      showNotif("Shredding is finished!");
     }
 
     if (currentProcess === "Molding") {
-      mixingIsFinishedNotif();
+      showNotif("Mixing is finished!");
     }
 
     if (currentProcess === "Finished") {
-      moldingIsFinishedNotif();
+      showNotif("Molding is finished!");
       updateCounter();
       updateHistory();
       setTimeout(updateProcessToIdle, 3000);
