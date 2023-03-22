@@ -21,9 +21,8 @@ import { useAuthContext } from "../hooks/useAuthContext";
 // firebase config
 import { rtdb } from "../firebase/config";
 
-// local notification
-import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
+// local notification custom hook
+import { useLocalNotification } from "../hooks/useLocalNotification";
 
 // utilities
 import { colors } from "../utilities/Colors";
@@ -47,6 +46,7 @@ import {
   standbyIcon,
 } from "../assets/index";
 
+
 // ------------------------- MAIN CODE ------------------------- //
 const Dashboard = () => {
   const [count, setCount] = useState(0);
@@ -54,41 +54,7 @@ const Dashboard = () => {
   const [machineTemp, setMachineTemp] = useState(0);
 
   // Local Notification
-  Notifications.setNotificationHandler({
-    handleNotification: async () => {
-      return {
-        shouldShowAlert: true,
-        shouldSetBadge: true,
-      };
-    },
-  });
-
-  useEffect(() => {
-    Permissions.getAsync(Permissions.NOTIFICATIONS)
-      .then((statusObj) => {
-        if (statusObj.status !== "granted") {
-          return Permissions.askAsync(Permissions.NOTIFICATIONS);
-        }
-        return statusObj;
-      })
-      .then((statusObj) => {
-        if (statusObj.status !== "granted") {
-          return;
-        }
-      });
-  }, []);
-
-  const showNotif = (body) => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "YosBrix",
-        body: body,
-      },
-      trigger: {
-        seconds: 1,
-      },
-    });
-  };
+  const { showNotification } = useLocalNotification();
 
   // Getting the current date
   const date = new Date();
@@ -153,15 +119,15 @@ const Dashboard = () => {
   // Algo
   useEffect(() => {
     if (currentProcess === "Mixing") {
-      showNotif("Shredding is finished!");
+      showNotification("Shredding is finished!");
     }
 
     if (currentProcess === "Molding") {
-      showNotif("Mixing is finished!");
+      showNotification("Mixing is finished!");
     }
 
     if (currentProcess === "Finished") {
-      showNotif("Molding is finished!");
+      showNotification("Molding is finished!");
       updateCounter();
       updateHistory();
       setTimeout(updateProcessToIdle, 3000);

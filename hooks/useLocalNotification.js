@@ -1,10 +1,8 @@
-import { StyleSheet, View, Text, Button } from "react-native";
 import { useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 
-const LocalNotification = () => {
+export const useLocalNotification = () => {
   Notifications.setNotificationHandler({
     handleNotification: async () => {
       return {
@@ -29,11 +27,11 @@ const LocalNotification = () => {
       });
   }, []);
 
-  const handleNotification = () => {
+  const showNotification = (body) => {
     Notifications.scheduleNotificationAsync({
       content: {
         title: "YosBrix",
-        body: "Molding is finished!",
+        body: body,
       },
       trigger: {
         seconds: 1,
@@ -41,23 +39,5 @@ const LocalNotification = () => {
     });
   };
 
-  return (
-    <View style={styles.container}>
-      <Text>Local Notification</Text>
-      <StatusBar style="auto" />
-      <Button title="Send Notification" onPress={handleNotification}/>
-    </View>
-  );
+  return { showNotification };
 };
-
-export default LocalNotification;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
