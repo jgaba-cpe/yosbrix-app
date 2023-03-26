@@ -24,13 +24,13 @@ import { rtdb } from "../firebase/config";
 // local notification custom hook
 import { useLocalNotification } from "../hooks/useLocalNotification";
 
-// utilities
-import { colors } from "../utilities/Colors";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
 import {
@@ -45,7 +45,6 @@ import {
   checkIcon,
   standbyIcon,
 } from "../assets/index";
-
 
 // ------------------------- MAIN CODE ------------------------- //
 const Dashboard = () => {

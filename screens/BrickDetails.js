@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Platform,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -13,14 +13,14 @@ import { useFonts } from "expo-font";
 // navigation
 import { useNavigation } from "@react-navigation/native";
 
-// utilities
-import { colors } from "../utilities/Colors";
-import KeyboardAvoidingWrapper from "../utilities/KeyboardAvoidingWrapper";
+// constants
+import { colors } from "../constants/Colors";
+import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
 import { hamburgerMenuBrownIcon, brickImage } from "../assets/index";
@@ -48,25 +48,22 @@ const BrickDetails = () => {
       <View style={styles.container}>
         <StatusBar style="dark" />
         <TouchableOpacity
-        onPress={() => {
-          navigation.openDrawer();
-        }}
-      >
-        <Image
-          source={hamburgerMenuBrownIcon}
-          style={styles.hamburgerMenuIcon}
-        />
-      </TouchableOpacity>
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+        >
+          <Image
+            source={hamburgerMenuBrownIcon}
+            style={styles.hamburgerMenuIcon}
+          />
+        </TouchableOpacity>
         <View style={styles.banner}>
           <Text style={styles.title}>About Bricks</Text>
         </View>
         <View style={styles.form}>
           <View style={styles.brickContainer}>
             <Text style={styles.brickName}>SUNDRIED BRICKS</Text>
-            <Image
-              style={styles.sundried}
-              source={brickImage}
-            />
+            <Image style={styles.sundried} source={brickImage} />
             <Text style={styles.credit}>
               Credit: STEVE PERCIVEAL/SCIENCE PHOTO LIBRARY
             </Text>

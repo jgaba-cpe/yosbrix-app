@@ -1,18 +1,18 @@
 // layout
-import { View,  Text, StyleSheet, TouchableOpacity, Image, } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
 // navigation
 import { useNavigation } from "@react-navigation/native";
 
-// utilities
-import { colors } from "../utilities/Colors";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
 import { hamburgerMenuBrownIcon } from "../assets/index";

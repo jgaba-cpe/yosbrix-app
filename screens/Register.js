@@ -24,20 +24,18 @@ import { useSignup } from "../hooks/useSignup";
 
 // components
 import CustomTextInput from "../components/CustomTextInput";
+import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 
-// utilities
-import { colors } from "../utilities/Colors";
-import KeyboardAvoidingWrapper from "../utilities/KeyboardAvoidingWrapper";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
-import {
-  yosbrix
-} from "../assets/index";
+import { yosbrix } from "../assets/index";
 
 // ------------------------- MAIN CODE ------------------------- //
 const Register = () => {
@@ -97,10 +95,7 @@ const Register = () => {
         )}
         {Platform.OS === "ios" && <StatusBar style="dark" />}
         <View style={styles.banner}>
-          <Image
-            style={styles.logo}
-            source={yosbrix}
-          />
+          <Image style={styles.logo} source={yosbrix} />
         </View>
         <View style={styles.form}>
           {error && (

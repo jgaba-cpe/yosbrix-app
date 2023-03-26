@@ -10,16 +10,16 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
-// utilities
-import { colors } from "../utilities/Colors";
+// navigation
+import { useNavigation } from "@react-navigation/native";
+
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
-
-// utilities
-import { useNavigation } from "@react-navigation/native";
+} from "../constants/LayoutTools";
 
 // assets
 import {

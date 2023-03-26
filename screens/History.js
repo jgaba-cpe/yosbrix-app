@@ -18,13 +18,13 @@ import { useNavigation } from "@react-navigation/native";
 // firebase config
 import { rtdb } from "../firebase/config";
 
-// utilities
-import { colors } from "../utilities/Colors";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
 import { hamburgerMenuBrownIcon, calendarIcon } from "../assets/index";

@@ -17,13 +17,13 @@ import { useNavigation } from "@react-navigation/native";
 // HTTP library
 import axios from "axios";
 
-// utilities
-import { colors } from "../utilities/Colors";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 // assets
 import {
