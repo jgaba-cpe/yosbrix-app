@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { colors } from "../utilities/Colors";
+import { colors } from "../constants/Colors";
 
 const CustomTextInput = ({
   placeholder,

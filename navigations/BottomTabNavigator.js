@@ -19,9 +19,9 @@ import {
   weatherIcon,
 } from "../assets/index";
 
-// utilities
-import { colors } from "../utilities/Colors";
-import { screenHeight } from "../utilities/LayoutTools";
+// constants
+import { colors } from "../constants/Colors";
+import { screenHeight } from "../constants/LayoutTools";
 
 const Tab = createBottomTabNavigator();
 

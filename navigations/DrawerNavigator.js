@@ -10,7 +10,6 @@ import AboutUs from "../screens/AboutUs";
 import BottomTabNavigator from "./BottomTabNavigator";
 // import Trial from "../screens/Trial";
 
-
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {

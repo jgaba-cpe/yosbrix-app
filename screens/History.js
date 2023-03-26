@@ -38,6 +38,8 @@ const History = () => {
     const historyRef = rtdb.ref("machine/" + "History/");
     const listener = historyRef.on("value", (snapshot) => {
       const fetchedData = snapshot.val();
+      
+      // console.log(fetchedData)
 
       const dataArr = [];
 
@@ -53,6 +55,8 @@ const History = () => {
       historyRef.off("value", listener);
     };
   }, []);
+
+  // console.log(historyData)
 
   const navigation = useNavigation();
 
