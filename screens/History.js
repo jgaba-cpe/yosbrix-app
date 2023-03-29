@@ -32,22 +32,28 @@ import { hamburgerMenuBrownIcon, calendarIcon } from "../assets/index";
 // ------------------------- MAIN CODE ------------------------- //
 const History = () => {
   const [historyData, setHistoryData] = useState([]);
+  const ascending = true;
 
   // Read "History/" data from RTDB
   useEffect(() => {
     const historyRef = rtdb.ref("machine/" + "History/");
     const listener = historyRef.on("value", (snapshot) => {
       const fetchedData = snapshot.val();
-      
-      // console.log(fetchedData)
+
+      // console.log(fetchedData) // JSON data from RTDB
 
       const dataArr = [];
 
       for (let key in fetchedData) {
+        // console.log(fetchedData[key])
         dataArr.push(fetchedData[key]);
       }
 
-      setHistoryData(dataArr);
+      if (ascending) {
+        setHistoryData(dataArr.reverse());
+      } else {
+        setHistoryData(dataArr);
+      }
     });
 
     return () => {
@@ -56,7 +62,8 @@ const History = () => {
     };
   }, []);
 
-  // console.log(historyData)
+  // console.log(historyData) // JSON converted to Array (Descending) recent to oldest
+  // console.log(historyData.reverse()) // // JSON converted to Array (Ascending) oldest to recent
 
   const navigation = useNavigation();
 

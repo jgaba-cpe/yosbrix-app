@@ -3,15 +3,18 @@ import * as firebase from "firebase";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+import { FIREBASE_API_KEY } from "@env";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBHtQiivm5K4i8eFAXuuDT0e6fcAz1marU",
+  apiKey: FIREBASE_API_KEY,
   authDomain: "yosbrix-app.firebaseapp.com",
-  databaseURL: "https://yosbrix-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://yosbrix-app-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "yosbrix-app",
   storageBucket: "yosbrix-app.appspot.com",
   messagingSenderId: "275008910733",
-  appId: "1:275008910733:web:c4315bffa1aa93abd239c4"
+  appId: "1:275008910733:web:c4315bffa1aa93abd239c4",
 };
 
 // Initialize Firebase

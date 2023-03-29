@@ -17,6 +17,9 @@ import { useNavigation } from "@react-navigation/native";
 // HTTP library
 import axios from "axios";
 
+// ENV
+import { OPENWEATHER_API_KEY } from "@env";
+
 // constants
 import { colors } from "../constants/Colors";
 import {
@@ -35,8 +38,6 @@ import {
 } from "../assets/index";
 
 // ------------------------- MAIN CODE ------------------------- //
-const ApiKey = "58af3ec6f575be73277e281a2233f34e";
-
 const Weather = () => {
   const [cityName, setCityName] = useState("Quezon City");
   const [weatherData, setWeatherData] = useState(null);
@@ -50,7 +51,7 @@ const Weather = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${ApiKey}`
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
         );
         setWeatherData(response.data);
         setLoading(false);
