@@ -13,16 +13,16 @@ import { useFonts } from "expo-font";
 import { useNavigation } from "@react-navigation/native";
 
 // components
-import CustomTextInput from "../../components/CustomTextInput";
+import CustomTextInput from "../components/CustomTextInput";
+import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 
-// utilities
-import { colors } from "../../utilities/Colors";
-import KeyboardAvoidingWrapper from "../../utilities/KeyboardAvoidingWrapper";
+// constants
+import { colors } from "../constants/Colors";
 import {
   screenWidth,
   screenHeight,
   statusBarHeight,
-} from "../../utilities/LayoutTools";
+} from "../constants/LayoutTools";
 
 const PlayGround = () => {
   const [isError, setIsError] = useState(false);

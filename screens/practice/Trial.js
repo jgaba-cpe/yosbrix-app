@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { colors } from "../utilities/Colors";
-import { screenHeight, screenWidth } from "../utilities/LayoutTools";
+import { colors } from "../../constants/Colors";
+import { screenHeight, screenWidth } from "../../constants/LayoutTools";
 
 const Trial = () => {
   return (
