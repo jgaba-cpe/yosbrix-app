@@ -21,6 +21,11 @@ const humidityIcon = require("./icons/humidity-icon.png");
 const visibilityIcon = require("./icons/visibility-icon.png");
 const checkIcon = require("./icons/check-icon.png");
 const standbyIcon = require("./icons/standby-icon.png");
+const shredder = require("./gif/Shredder.gif");
+const mixer = require("./gif/Mixer.gif");
+const molder = require("./gif/Molder.gif");
+const goal = require("./gif/Goal.gif");
+const idle = require("./gif/Idle.gif");
 
 // icons export
 export {
@@ -45,16 +50,39 @@ export {
   humidityIcon,
   visibilityIcon,
   checkIcon,
-  standbyIcon
+  standbyIcon,
+  shredder,
+  mixer,
+  molder,
+  goal, 
+  idle
 };
 
 // images import
-const brickImage = require("./images/brick-image.png")
+const brickImage = require("./images/brick-image.png");
+const brickImage2 = require("./images/brick-image2.jpg");
+const brickImage3 = require("./images/brick-image3.jpg");
+const brickImage4 = require("./images/brick-image4.jpg");
+const step0Image = require("./gif/foodscale.gif");
+const step1Image = require("./gif/powersocket.gif");
+const step2Image = require("./gif/passwordkeypad.gif");
+const step3Image = require("./gif/mixermachine.gif");
+const step4Image = require("./gif/sawmachine.gif");
+const step5Image = require("./gif/notif.gif");
 const yosbrix = require("./logo/YosBrix.png")
 
 // images export
 export {
   brickImage,
+  brickImage2,
+  brickImage3,
+  brickImage4,
+  step0Image,
+  step1Image,
+  step2Image,
+  step3Image,
+  step4Image,
+  step5Image,
   yosbrix
 }
 

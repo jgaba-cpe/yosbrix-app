@@ -6,16 +6,17 @@ import {
   Platform,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import Swiper from "react-native-swiper";
 
 // navigation
 import { useNavigation } from "@react-navigation/native";
 
 // constants
 import { colors } from "../constants/Colors";
-import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 import {
   screenWidth,
   screenHeight,
@@ -23,7 +24,15 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import { hamburgerMenuBrownIcon, brickImage } from "../assets/index";
+import {
+  hamburgerMenuIcon,
+  brickImage,
+  brickImage2,
+  brickImage3,
+  brickImage4,
+} from "../assets/index";
+import Wave from "../assets/svg/Wave";
+import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
 
 // ------------------------- MAIN CODE ------------------------- //
 const BrickDetails = () => {
@@ -43,41 +52,113 @@ const BrickDetails = () => {
 
   if (!fontsLoaded) return null;
 
+  const bannerContainerHeight = screenHeight * 0.2527;
+  const bannerHeight = bannerContainerHeight * 0.869565;
+  const bannerWaveHeight = bannerHeight * 0.6;
+
   return (
-    <KeyboardAvoidingWrapper>
-      <View style={styles.container}>
-        <StatusBar style="dark" />
-        <TouchableOpacity
-          onPress={() => {
-            navigation.openDrawer();
-          }}
-        >
-          <Image
-            source={hamburgerMenuBrownIcon}
-            style={styles.hamburgerMenuIcon}
-          />
-        </TouchableOpacity>
+    <View style={styles.container}>
+      {Platform.OS === "android" && (
+        <StatusBar style="dark" backgroundColor={colors.white} />
+      )}
+      {Platform.OS === "ios" && <StatusBar style="dark" />}
+      {/* ---------------------- BANNER ---------------------- */}
+      <View style={styles.bannerContainer}>
         <View style={styles.banner}>
-          <Text style={styles.title}>About Bricks</Text>
+          <View style={styles.bannerHeader}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            >
+              <Hamburger />
+            </TouchableOpacity>
+            <Text style={styles.aboutBrickText}>About Brick</Text>
+          </View>
         </View>
-        <View style={styles.form}>
-          <View style={styles.brickContainer}>
-            <Text style={styles.brickName}>SUNDRIED BRICKS</Text>
-            <Image style={styles.sundried} source={brickImage} />
-            <Text style={styles.credit}>
-              Credit: STEVE PERCIVEAL/SCIENCE PHOTO LIBRARY
-            </Text>
-          </View>
-          <View style={styles.detailContainer}>
-            <Text style={styles.details}>
-              The main product of this machine is a molded brick made of
-              terracotta clay mixed with cigarette butts and is ready to be sun
-              dried.
-            </Text>
-          </View>
+        <View style={styles.subTextContainer}>
+          <Text style={styles.subText}>The brick and its details.</Text>
+        </View>
+        <View style={styles.bannerWave}>
+          <Wave height={bannerWaveHeight} />
         </View>
       </View>
-    </KeyboardAvoidingWrapper>
+      {/* ---------------------- IMAGE SLIDER ---------------------- */}
+      <View style={styles.swiperContainer}>
+        <Swiper
+          showsPagination={true}
+          dotStyle={styles.paginationDot}
+          activeDotStyle={styles.activePaginationDot}
+          autoplay={true}
+        >
+          <View style={styles.slide}>
+            <Image style={styles.brickImage} source={brickImage} />
+          </View>
+          <View style={styles.slide}>
+            <Image style={styles.brickImage} source={brickImage2} />
+          </View>
+          <View style={styles.slide}>
+            <Image style={styles.brickImage} source={brickImage3} />
+          </View>
+          <View style={styles.slide}>
+            <Image style={styles.brickImage} source={brickImage4} />
+          </View>
+        </Swiper>
+      </View>
+      {/* ---------------------- INFORMATIONS ---------------------- */}
+      
+      <ScrollView>
+        <View style={styles.informationContainer}>
+          <Text style={styles.information}>
+            The main product of this machine is a molded brick made of
+            terracotta clay mixed with cigarette butts and is ready to be sun
+            dried.
+          </Text>
+        </View>
+        {/* ---------------------- BENEFITS ---------------------- */}
+        <View style={styles.redContainer}>
+          <Text style={styles.benefitsTitle}>
+            BENEFITS OF BRICKS WITH CIGARETTE BUTTS
+          </Text>
+        </View>
+        <View style={styles.whiteContainer}>
+          <Text style={styles.benefitsContent}>
+            1. Compressive strength is more than 85 percent lower than that of
+            normal bricks.
+          </Text>
+          <Text style={styles.benefitsContent}>
+            2. Water absorption increases as cigarette butt content increases.
+          </Text>
+          <Text style={styles.benefitsContent}>
+            3. Porosity and contraction of cigarette butt bricks are minimal.
+          </Text>
+          <Text style={styles.benefitsContent}>
+            4. Lightweight and have a high insulating capacity.
+          </Text>
+        </View>
+        {/* ---------------------- MATERIALS ---------------------- */}
+        <View style={styles.redContainer}>
+          <Text style={styles.materialsTitle}>
+            RAW MATERIALS PER MACHINE EXECUTION
+          </Text>
+        </View>
+        <View style={styles.white2Container}>
+          <Text style={styles.materialsContent}>
+            The machine can only produce 2 bricks per execution. These raw
+            materials are for 2 bricks only:
+          </Text>
+          <Text style={styles.materialsContent}>
+            1. 2.70 kilograms of Terracotta Clay.
+          </Text>
+          <Text style={styles.materialsContent}>
+            2. 270 mililliters of Water.
+          </Text>
+          <Text style={styles.materialsContent}>
+            3. 27 grams of Cigarette Butts.
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -89,29 +170,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.tertiary,
     marginTop: statusBarHeight,
+    alignItems: "center",
   },
-  hamburgerMenuIcon: {
-    // marginTop: 24,
-    // marginTop: "3.09%",
-    marginTop: screenHeight * 0.0309,
-    marginBottom: screenHeight * 0.0309,
-    // marginLeft: 16,
-    // marginLeft: "4.44%",
-    marginLeft: screenWidth * 0.04,
+  // ----- BANNER ----- //
+  bannerContainer: {
+    position: "relative",
+    // 160 is what percent of 728 = 21.98%
+    height: screenHeight * 0.2198,
+    width: "100%",
   },
   banner: {
-    // height: 77,
-    height: screenHeight * 0.1,
-    // height: "9.92%",
-    width: "100%",
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.white,
-    borderTopColor: colors.tertiary,
-    // borderTopWidth: 50,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    // borderWidth: 0.5,
+    // 160 is what percent of 184 = 85.9565%
+    height: "86.9565%",
+    width: "100%",
+    backgroundColor: colors.primary,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -121,77 +194,104 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-
-  title: {
-    color: colors.titles,
+  bannerHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // 320 is what percent of 360 = 88.89%
+    width: screenWidth * 0.8889,
+    // 40 is what percent of 728 = 5.49%%
+    marginTop: screenHeight * 0.0549,
+  },
+  hamburgerMenu: {},
+  aboutBrickText: {
     fontFamily: "LatoBold",
     fontSize: 39,
+    color: colors.white,
   },
-
-  form: {
-    // height: 560,
-    height: screenHeight * 0.8,
-    // height: "70%",
-    width: "100%",
-    marginTop: "10%",
+  subTextContainer: {
+    position: "absolute",
+    zIndex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
     alignItems: "center",
-    // borderWidth: 0.5,
+    // 320 is what percent of 360 = 88.89%
+    width: screenWidth * 0.8889,
+    // 96 is what percent of 728 = 13.19%
+    top: screenHeight * 0.1319,
+    // 24 is what percent of 360 = 6.67%
+    right: screenWidth * 0.0667,
   },
-
-  brickContainer: {
-    // height: 240,
-    height: screenHeight * 0.3,
-    // height: "20%",
-    width: "100%",
-    justifyContent: "flex-start",
+  subText: {
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    color: colors.white,
+  },
+  bannerWave: {
+    position: "absolute",
+    // 64 is what percent of 728 = 8.79%
+    top: screenHeight * 0.0879,
+  },
+  // ----- BRICK NAME ----- //
+  brickNameContainer: {
     alignItems: "center",
-    backgroundColor: colors.primary,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    // borderWidth: 0.5,
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.17,
-    shadowRadius: 3.05,
-    elevation: 4,
-  },
-
-  sundried: {
-    marginTop: "5%",
-    width: "100.00%",
-    resizeMode: "stretch",
+    marginTop: screenHeight * 0.021,
   },
 
   brickName: {
-    marginTop: "8%",
-    color: colors.white,
-    fontFamily: "LatoRegular",
-    fontSize: 30,
-  },
-
-  credit: {
-    marginTop: "2%",
+    fontSize: 25,
+    fontFamily: "LatoBold",
     color: colors.black100,
-    fontFamily: "LatoRegular",
-    fontSize: 10,
+  },
+  // ----- IMAGE SLIDER ----- //
+  swiperContainer: {
+    borderColor: colors.primary,
+    marginTop: screenHeight * 0.031,
+    height: screenHeight * 0.3186,
+    width: "100%",
   },
 
-  detailContainer: {
-    // height: 240,
-    height: screenHeight * 0.4,
-    // height: "20%",
-    width: "90%",
-    justifyContent: "flex-start",
+  slide: {
+    flexDirection: "row",
+    height: screenHeight * 0.3186,
+    width: "100%",
+    justifyContent: "center",
     alignItems: "center",
+  },
+
+  brickImage: {
+    height: 240,
+    width: "88%",
+    borderRadius: 8,
+  },
+
+  paginationDot: {
+    bottom: 1,
+    width: 8,
+    height: 8,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    backgroundColor: colors.secondary,
+  },
+  activePaginationDot: {
+    bottom: 1,
     backgroundColor: colors.primary,
-    marginTop: "18%",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+  },
+  // ----- INFORMATION ----- //
+
+  informationContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: screenHeight * 0.021,
+    // height: 96,
+    height: screenHeight * 0.1318,
+    // height: 38.46%
+    // width: 328,
+    width: screenWidth * 0.9111,
+    // width: 91.11%
+    // backgroundColor: colors.primary,
     // borderWidth: 0.5,
-    shadowColor: "#000000",
+    borderRadius: 10,
     shadowOffset: {
       width: 0,
       height: 3,
@@ -201,12 +301,98 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
 
-  details: {
-    marginTop: "2%",
-    marginLeft: "3%",
-    marginRight: "3%",
-    color: colors.white,
+  information: {
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
+    color: colors.secondary,
+    textAlign: "center",
+  },
+
+  redContainer: {
+    marginTop: screenHeight * 0.021,
+    // height: 32,
+    height: screenHeight * 0.07,
+    // width: 120,
+    width: screenWidth * 0.911,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+
+  benefitsTitle: {
     fontFamily: "LatoBold",
     fontSize: 16,
+    color: colors.white,
+    marginTop: "5.71%",
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
+  },
+
+  whiteContainer: {
+    alignContent: "center",
+    // 264 is what percent of 728 = 36.26%
+    height: screenHeight * 0.3626,
+    // width: 120,
+    width: screenWidth * 0.911,
+    backgroundColor: colors.white,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  benefitsContent: {
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    color: colors.black100,
+    marginTop: "5.71%",
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
+  },
+
+  white2Container: {
+    alignContent: "center",
+    // height: 48,
+    height: screenHeight * 0.2857,
+    // width: 120,
+    width: screenWidth * 0.911,
+    marginBottom: 20,
+    backgroundColor: colors.white,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+
+  materialsTitle: {
+    fontFamily: "LatoBold",
+    fontSize: 16,
+    color: colors.white,
+    marginTop: "5.71%",
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
+  },
+  materialsContent: {
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    color: colors.black100,
+    marginTop: "5.71%",
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
   },
 });

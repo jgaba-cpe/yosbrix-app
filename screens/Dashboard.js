@@ -44,7 +44,21 @@ import {
   notificationIcon,
   checkIcon,
   standbyIcon,
+  shredder,
+  mixer,
+  molder,
+  goal,
+  idle,
 } from "../assets/index";
+import Wave from "../assets/svg/Wave";
+import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
+import LogoIcon from "../assets/svg/Logo Icon.svg";
+import TotalBrickIcon from "../assets/svg/Total Brick Icon.svg";
+import DoubleArrowTertiary from "../assets/svg/Double Arrow Tertiary.svg";
+import DoubleArrowGray from "../assets/svg/Double Arrow Gray.svg";
+import Gear from "../assets/svg/Gear Icon.svg";
+import NotificationOn from "../assets/svg/Notifications On.svg";
+import NotificationOff from "../assets/svg/Notifications Off.svg";
 
 // ------------------------- MAIN CODE ------------------------- //
 const Dashboard = () => {
@@ -151,6 +165,10 @@ const Dashboard = () => {
 
   if (!fontsLoaded) return null;
 
+  const bannerContainerHeight = screenHeight * 0.2527;
+  const bannerHeight = bannerContainerHeight * 0.869565;
+  const bannerWaveHeight = bannerHeight * 0.6;
+
   return (
     <View style={styles.container}>
       {Platform.OS === "android" && (
@@ -166,16 +184,22 @@ const Dashboard = () => {
                 navigation.openDrawer();
               }}
             >
-              <Image source={hamburgerMenuIcon} style={styles.hamburgerMenu} />
+              <Hamburger />
             </TouchableOpacity>
             <Text style={styles.dashboardText}>Dashboard</Text>
           </View>
         </View>
-        <View style={styles.tag}>
-          <Image source={logoIcon} style={styles.logo} />
+        <View style={styles.greetingsContainer}>
           <Text style={styles.greetingsText}>
             Hi, {user ? user.displayName : "User"}!
           </Text>
+        </View>
+        <View style={styles.bannerWave}>
+          <Wave height={bannerWaveHeight} />
+        </View>
+        <View style={styles.tag}>
+          <LogoIcon style={styles.yosbrixLogo} />
+          <Text style={styles.yosbrixText}>YosBrix</Text>
         </View>
       </View>
       {/* ---------------------- WIDGETS ---------------------- */}
@@ -188,18 +212,10 @@ const Dashboard = () => {
         >
           <Text style={styles.bricksMoldedText}>Bricks Molded</Text>
           <View style={styles.textAndIconContainer}>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.bricksMoldedNumber
-                  : [styles.bricksMoldedNumber, { fontSize: 80 }]
-              }
-            >
-              {count}
-            </Text>
-            <Image source={totalBrickIcon} />
+            <Text style={styles.bricksMoldedNumber}>{count}</Text>
+            <TotalBrickIcon />
           </View>
-          <Image source={doubleArrowIcon} style={styles.doubleArrowIcon} />
+          <DoubleArrowTertiary style={styles.doubleArrowIcon} />
         </TouchableOpacity>
         <View style={styles.smallWidgetsContainer}>
           <TouchableOpacity
@@ -208,48 +224,13 @@ const Dashboard = () => {
               navigation.navigate("Weather");
             }}
           >
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.normalText
-                  : [styles.normalText, { fontSize: 16, marginTop: "8.7%" }]
-              }
-            >
-              Weather Today
-            </Text>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.bigText
-                  : [styles.bigText, { fontSize: 43 }]
-              }
-            >
-              30°C
-            </Text>
-            <Image
-              source={doubleArrowSmallIcon}
-              style={styles.doubleArrowSmallIcon}
-            />
+            <Text style={styles.weatherNormalText}>Weather Today</Text>
+            <Text style={styles.weatherBigText}>30°C</Text>
+            <DoubleArrowGray style={styles.doubleArrowSmallIcon} />
           </TouchableOpacity>
           <View style={styles.temperature}>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.normalText
-                  : [styles.normalText, { fontSize: 16, marginTop: "8.7%" }]
-              }
-            >
-              System Temp
-            </Text>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.bigText
-                  : [styles.bigText, { fontSize: 43 }]
-              }
-            >
-              {machineTemp}°C
-            </Text>
+            <Text style={styles.systemNormalText}>System Temp</Text>
+            <Text style={styles.systemBigText}>{machineTemp}°C</Text>
           </View>
         </View>
       </View>
@@ -257,150 +238,42 @@ const Dashboard = () => {
       <View style={styles.processContainer}>
         <View style={styles.top}>
           <View style={styles.topLeft}>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.currentProcessTitle
-                  : [styles.currentProcessTitle, { fontSize: 19 }]
-              }
-            >
-              Current Process
-            </Text>
-            <Image source={gearIcon} />
+            <Text style={styles.currentProcessTitle}>Current Process</Text>
+            <Gear />
           </View>
           <View style={styles.topRight}>
-            <Image source={notificationIcon} />
+            <NotificationOn />
           </View>
         </View>
         {currentProcess === "Shredding" && (
           <View style={styles.bottom}>
-            <View style={styles.currentProcess}>
-              <Text
-                style={
-                  Platform.OS === "ios"
-                    ? styles.currentProcessText
-                    : [styles.currentProcessText, { fontSize: 42 }]
-                }
-              >
-                Shredding
-              </Text>
-              <ActivityIndicator
-                style={styles.loading}
-                size="large"
-                color={colors.primary}
-              />
-            </View>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Mixing
-            </Text>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Molding
-            </Text>
+            <Text style={styles.shredderText}>Shredding</Text>
+            <Image source={shredder} style={styles.shredderGif} />
           </View>
         )}
         {currentProcess === "Mixing" && (
           <View style={styles.bottom}>
-            <View style={styles.currentProcess}>
-              <Text
-                style={
-                  Platform.OS === "ios"
-                    ? styles.currentProcessText
-                    : [styles.currentProcessText, { fontSize: 42 }]
-                }
-              >
-                Mixing
-              </Text>
-              <ActivityIndicator
-                style={styles.loading}
-                size="large"
-                color={colors.primary}
-              />
-            </View>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Molding
-            </Text>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Shredding
-            </Text>
+            <Text style={styles.mixerText}>Mixing</Text>
+            <Image source={mixer} style={styles.mixerGif} />
           </View>
         )}
         {currentProcess === "Molding" && (
           <View style={styles.bottom}>
-            <View style={styles.currentProcess}>
-              <Text
-                style={
-                  Platform.OS === "ios"
-                    ? styles.currentProcessText
-                    : [styles.currentProcessText, { fontSize: 42 }]
-                }
-              >
-                Molding
-              </Text>
-              <ActivityIndicator
-                style={styles.loading}
-                size="large"
-                color={colors.primary}
-              />
-            </View>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Shredding
-            </Text>
-            <Text
-              style={
-                Platform.OS === "ios"
-                  ? styles.pendingProcess
-                  : [styles.pendingProcess, { fontSize: 23 }]
-              }
-            >
-              Mixing
-            </Text>
+            <Text style={styles.molderText}>Molding</Text>
+            <Image source={molder} style={styles.molderGif} />
           </View>
         )}
         {currentProcess === "Finished" && (
           <View style={styles.others}>
-            <View style={styles.rowContainer}>
-              <Text style={styles.finishText}>Process Finished</Text>
-              <Image source={checkIcon} />
-            </View>
+            <Text style={styles.finishedText}>Process finished</Text>
+            <Image source={goal} style={styles.finishedGif}/>
           </View>
         )}
         {currentProcess === "Idle" && (
           <View style={styles.others}>
-            <View style={styles.rowContainer}>
-              <Text style={styles.finishText}>Standby</Text>
-              <Image source={standbyIcon} />
-            </View>
-          </View>
+          <Text style={styles.idleText}>No current process</Text>
+          <Image source={idle} style={styles.idleGif}/>
+        </View>
         )}
       </View>
     </View>
@@ -411,24 +284,23 @@ export default Dashboard;
 
 // ------------------------- STYLES ------------------------- //
 const styles = StyleSheet.create({
-  // ----- BANNER ----- //
   container: {
     flex: 1,
     backgroundColor: colors.tertiary,
     marginTop: statusBarHeight,
     alignItems: "center",
   },
+  // -------------------- BANNER -------------------- //
   bannerContainer: {
-    // height: 192,
-    height: screenHeight * 0.24,
-    // height: "24%",
+    position: "relative",
+    // 184 is what percent of 728 = 25.27%
+    height: screenHeight * 0.2527,
     width: "100%",
-    // borderBottomWidth: 0.5,
   },
   banner: {
     alignItems: "center",
-    // height: 160,
-    height: "83.33%",
+    // 160 is what percent of 184 = 85.9565%
+    height: "86.9565%",
     width: "100%",
     backgroundColor: colors.primary,
     shadowColor: "#000000",
@@ -444,12 +316,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // width: 320,
+    // 320 is what percent of 360 = 88.89%
     width: screenWidth * 0.8889,
-    // width: "88.89%"
-    // marginTop: 48,
-    marginTop: screenHeight * 0.0619,
-    // marginTop: "6.19%",
+    // 40 is what percent of 728 = 5.4945%
+    marginTop: screenHeight * 0.054945,
   },
   hamburgerMenu: {},
   dashboardText: {
@@ -457,18 +327,38 @@ const styles = StyleSheet.create({
     fontSize: 39,
     color: colors.white,
   },
+  greetingsContainer: {
+    position: "absolute",
+    zIndex: 1,
+    alignItems: "flex-end",
+    // 320 is what percent of 360 = 88.89%
+    width: screenWidth * 0.8889,
+    // 95 is what percent of 728 = 13.05%
+    top: screenHeight * 0.1305,
+    // 24 is what percent of 360 = 6.67%
+    right: screenWidth * 0.0667,
+  },
+  greetingsText: {
+    fontFamily: "LatoRegular",
+    fontSize: 16,
+    color: colors.white,
+  },
+  bannerWave: {
+    position: "absolute",
+    // 64 is what percent of 728 = 8.79%
+    top: screenHeight * 0.0879,
+  },
   tag: {
     position: "absolute",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    // height: 56,
-    height: "29.17%",
-    // width: 200,
-    width: "55.56%",
-    // marginTop: 128,
-    marginTop: screenHeight * 0.1649,
-    // marginTop: "16.49%",
+    // 56 is what percent of 184 = 30.43%
+    height: "30.43%",
+    // 186 is what percent of 360 = 51.67%
+    width: "51.67%",
+    // 128 is what percent of 728 = 17.58%
+    top: screenHeight * 0.1758,
     backgroundColor: colors.white,
     borderTopRightRadius: 32,
     borderBottomRightRadius: 32,
@@ -481,41 +371,37 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  logo: {
-    marginLeft: 16,
+  yosbrixLogo: {
+    // 16 is what percent of 186 = 8.6%
+    marginLeft: "8.6%",
   },
-  greetingsText: {
-    marginLeft: 16,
+  yosbrixText: {
+    // 16 is what percent of 186 = 8.6%
+    marginLeft: "8.6%",
     fontFamily: "LatoBold",
     fontSize: 25,
     color: colors.black75,
   },
-  // ----- WIDGETS ----- //
+  // -------------------- WIDGETS -------------------- //
   widgetsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // height: 200,
-    height: screenHeight * 0.25,
-    // height: "25%",
-    // width: 328,
+    // 200 is what percent of 728 = 27.47%
+    height: screenHeight * 0.2747,
+    // 328 is what percent of 360 = 91.11%
     width: screenWidth * 0.9111,
-    // width: "91.11%",
-    // borderWidth: 0.5,
-    // marginTop: 8,
-    marginTop: screenHeight * 0.01,
-    // marginTop: "1%"
+    // 16 is what percent of 728 = 2.2%
+    marginTop: screenHeight * 0.022,
   },
   totalBricks: {
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     alignItems: "center",
-    // height: 184,
+    // 184 is what percent of 200 = 92%
     height: "92%",
-    // width: 200,
+    // 200 is what percent of 328 = 60.98%
     width: "60.98%",
-    borderWidth: 0.5,
     backgroundColor: colors.primary,
-    borderColor: colors.black5,
     borderRadius: 24,
     shadowColor: "#000000",
     shadowOffset: {
@@ -531,14 +417,14 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: colors.tertiary,
     // marginTop: 16,
-    marginTop: "8.7%",
+    // marginTop: "8.7%",
   },
   textAndIconContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     // marginTop: 8,
-    marginTop: "4.35%",
+    // marginTop: "4.35%",
   },
   bricksMoldedNumber: {
     fontFamily: "LatoBold",
@@ -547,24 +433,23 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   doubleArrowIcon: {
-    // flexDirection: "row",
     alignSelf: "flex-end",
     marginRight: 16,
   },
   smallWidgetsContainer: {
     justifyContent: "space-between",
     alignItems: "center",
-    // height: 200,
+    // 200 is what percent of 200 = 100%
     height: "100%",
-    // width: 112,
+    // 112 is what percent of 328 = 34.15%
     width: "34.15%",
   },
   weatherToday: {
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     alignItems: "center",
-    // height: 96,
+    // 96 is what percent of 200 = 48%
     height: "48%",
-    // width: 112,
+    // 112 is what percent of 112 = 100%
     width: "100%",
     borderWidth: 0.5,
     backgroundColor: colors.white,
@@ -580,11 +465,11 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   temperature: {
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     alignItems: "center",
-    // height: 96,
+    // 96 is what percent of 200 = 48%
     height: "48%",
-    // width: 112,
+    // 112 is what percent of 112 = 100%
     width: "100%",
     borderWidth: 0.5,
     backgroundColor: colors.white,
@@ -599,14 +484,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  normalText: {
+  weatherNormalText: {
     fontFamily: "LatoRegular",
     fontSize: 13,
     color: colors.black75,
-    // marginTop: 8,
-    marginTop: "4.35%",
   },
-  bigText: {
+  weatherBigText: {
     fontFamily: "LatoBold",
     fontSize: 39,
     color: colors.secondary,
@@ -615,18 +498,30 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginRight: 16,
   },
-  // ----- PROCESS ----- //
+  systemNormalText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+  },
+  systemBigText: {
+    fontFamily: "LatoBold",
+    fontSize: 39,
+    color: colors.secondary,
+    // 16 is what percent of 728 = 0.022%
+    marginBottom: screenHeight * 0.022,
+  },
+  // -------------------- PROCESS -------------------- //
   processContainer: {
-    // height: 232,
-    height: screenHeight * 0.29,
-    // height: "29%",
-    // width: 328,
+    // 232 is what percent of 728 = 31.87%
+    // 216 is what percent of 728 = 29.67%
+    // Layout Problems for Small Screens
+    height: screenHeight >= 780 ? screenHeight * 0.3187 : screenHeight * 0.2967,
+    // 328 is what percent of 360 = 91.11%
     width: screenWidth * 0.9111,
     // width: "91.11%",
     borderWidth: 2,
-    // marginTop: 16,
-    marginTop: screenHeight * 0.02,
-    // marginTop: "2%",
+    // 16 is what percent of 728 = 2.2%
+    marginTop: screenHeight * 0.022,
     backgroundColor: colors.white,
     borderColor: colors.black5,
     borderRadius: 16,
@@ -643,9 +538,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // height: 56,
+    // 56 is what percent of 232 = 24.14%
     height: "24.14%",
-    // width: 328,
+    // 328 is what percent of 328 = 100%
     width: "100%",
     borderBottomWidth: 2,
     borderColor: colors.black5,
@@ -653,65 +548,92 @@ const styles = StyleSheet.create({
   topLeft: {
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: 16,
+    // 16 is what percent of 328 = 4.88%
     marginLeft: "4.88%",
   },
   currentProcessTitle: {
     fontFamily: "LatoRegular",
     fontSize: 16,
     color: colors.black75,
-    // marginRight: 16,
+    // 16 is what percent of 328 = 4.88%
     marginRight: "4.88%",
   },
   topRight: {
-    // marginRight: 16,
+    // 16 is what percent of 328 = 4.88%
     marginRight: "4.88%",
   },
   bottom: {
-    // marginTop: 16,
-    marginTop: "6.9%",
-  },
-  currentProcess: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // marginBottom: 8,
-    marginBottom: "4.35%",
+    // borderWidth: 0.5,
   },
-  currentProcessText: {
+  shredderText: {
+    fontSize: 31,
     fontFamily: "LatoBold",
-    fontSize: 36,
     color: colors.secondary,
-    // marginLeft: 24,
+    // 24 is what percent of 328 = 7.32%
     marginLeft: "7.32%",
   },
-  loading: {
-    marginRight: 40,
-    marginRight: "12.2%",
-  },
-  pendingProcess: {
-    fontFamily: "LatoBold",
-    fontSize: 17,
-    color: colors.black75,
-    marginLeft: 24,
-    marginLeft: "7.32%",
-    // marginBottom: 4,
-    marginBottom: "1.72%",
-  },
-  others: {
-    // marginTop: 24,
-    marginTop: "10.34%",
-  },
-  rowContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  finishText: {
-    fontFamily: "LatoBold",
-    fontSize: 36,
-    color: colors.secondary,
-    // marginRight: 16,
+  shredderGif: {
+    height: 144,
+    width: 144,
+    // 16 is what percent of 328 = 4.88%
     marginRight: "4.88%",
   },
+  mixerText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 32 is what percent of 328 = 9.756%
+    marginLeft: "9.756%",
+  },
+  mixerGif: {
+    height: 144,
+    width: 144,
+    // 48 is what percent of 328 = 14.63%
+    marginRight: "14.63%",
+  },
+  molderText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 32 is what percent of 328 = 9.756%
+    marginLeft: "9.756%",
+  },
+  molderGif: {
+    height: 144,
+    width: 144,
+    // 48 is what percent of 328 = 14.63%
+    marginRight: "14.63%",
+  },
+  others: {
+    justifyContent: "center",
+    alignItems: "center",
+
+  },
+  finishedText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+  }, 
+  finishedGif: {
+    height: 104,
+    width: 104,
+  },
+  idleText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+  }, 
+  idleGif: {
+    height: 104,
+    width: 104,
+  }
 });

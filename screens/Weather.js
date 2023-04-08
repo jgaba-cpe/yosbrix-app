@@ -7,9 +7,13 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+
+// import WeatherSearch from "./WeatherSearch";
+import { EvilIcons } from "@expo/vector-icons";
 
 // navigation
 import { useNavigation } from "@react-navigation/native";
@@ -30,43 +34,50 @@ import {
 
 // assets
 import {
-  hamburgerMenuBrownIcon,
+  hamburgerMenuIcon,
   airPressureIcon,
   windIcon,
   humidityIcon,
   visibilityIcon,
+  tempIcon,
 } from "../assets/index";
+import Wave from "../assets/svg/Wave";
+import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
+import WeatherIcon from "../assets/svg/Weather Icon.svg";
+import WindStatus from "../assets/svg/Wind Status Icon.svg";
+import Humidity from "../assets/svg/Humidity Icon.svg";
+import AirPressure from "../assets/svg/Air Pressure Icon.svg";
+import Visibility from "../assets/svg/Visibility Icon.svg";
+import Search from "../assets/svg/Search Icon.svg";
 
 // ------------------------- MAIN CODE ------------------------- //
 const Weather = () => {
-  const [cityName, setCityName] = useState("Quezon City");
+  const [cityName, setCityName] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchWeatherData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
-        );
-        setWeatherData(response.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
+  const fetchWeatherData = async (cityName) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
+      );
+      setWeatherData(response.data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
 
-    fetchWeatherData();
+  useEffect(() => {
+    fetchWeatherData("Quezon City");
   }, []);
 
-  console.log(weatherData);
-  console.log(weatherData?.main.temp - 273.15); // celcius
-  console.log(weatherData?.name); // City
+  // console.log(weatherData);
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -82,105 +93,190 @@ const Weather = () => {
 
   if (!fontsLoaded) return null;
 
+  const bannerContainerHeight = screenHeight * 0.2527;
+  const bannerHeight = bannerContainerHeight * 0.869565;
+  const bannerWaveHeight = bannerHeight * 0.6;
+
   return (
     <View style={styles.container}>
       {Platform.OS === "android" && (
         <StatusBar style="dark" backgroundColor={colors.white} />
       )}
       {Platform.OS === "ios" && <StatusBar style="dark" />}
-      <TouchableOpacity
-        onPress={() => {
-          navigation.openDrawer();
-        }}
-      >
-        <Image
-          source={hamburgerMenuBrownIcon}
-          style={styles.hamburgerMenuIcon}
-        />
-      </TouchableOpacity>
-      <View style={styles.banner}>
-        <Text style={styles.txtTitle}>Weather Today</Text>
-      </View>
-      <View style={styles.weatherContainer}>
-        {!loading ? (
-          <>
-            <Text style={styles.city}>{weatherData?.name}, PH</Text>
-            <Text style={styles.temp}>
-              {Math.round(weatherData?.main.temp - 273.15)} °C
+      {/* ---------------------- BANNER ---------------------- */}
+      <View style={styles.bannerContainer}>
+        <View style={styles.banner}>
+          <View style={styles.bannerHeader}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            >
+              <Hamburger />
+            </TouchableOpacity>
+            <Text style={styles.weatherTodayText}>Weather Today</Text>
+          </View>
+        </View>
+        <View style={styles.temperatureContainer}>
+          {!loading ? (
+            <Text style={styles.temperatureText}>
+              {Math.round(weatherData?.main.temp - 273.15)}°C
             </Text>
-            <View style={styles.tempMainContainer}>
-              <View style={styles.tempMinContainer}>
-                <Text style={styles.txtMinMax}>Min Temp: </Text>
-                <Text style={styles.txtMinMax}>
-                  {Math.round(weatherData?.main.temp_min - 273.15)} °C
-                </Text>
-              </View>
-              <View style={styles.tempMinContainer}>
-                <Text style={styles.txtMinMax}>Max Temp: </Text>
-                <Text style={styles.txtMinMax}>
-                  {Math.round(weatherData?.main.temp_max - 273.15)} °C
-                </Text>
-              </View>
+          ) : (
+            <ActivityIndicator size="large" />
+          )}
+          <WeatherIcon />
+        </View>
+        <View style={styles.bannerWave}>
+          <Wave height={bannerWaveHeight} />
+        </View>
+      </View>
+      {/* ---------------------- SEARCH ---------------------- */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          placeholder={"Search for a City (e.g. Marikina)"}
+          value={cityName}
+          onChangeText={(text) => setCityName(text)}
+        />
+        <TouchableOpacity onPress={() => fetchWeatherData(cityName)}>
+          <Search />
+        </TouchableOpacity>
+      </View>
+      {/* ---------------------- WEATHER MAIN ---------------------- */}
+      <View style={styles.weatherContainer}>
+        {weatherData ? (
+          <>
+            <View style={styles.columnContainer}>
+              {!loading ? (
+                <>
+                  <Text style={styles.city}>
+                    {weatherData?.name}, {weatherData?.sys.country}
+                  </Text>
+
+                  <View style={styles.weatherTxtContainer}>
+                    <Text style={styles.temp}>
+                      {Math.round(weatherData?.main.temp - 273.15)}°C
+                    </Text>
+                  </View>
+
+                  <View style={styles.weatherTxtContainer}>
+                    <Text style={styles.txtRegular}>Feels like </Text>
+                    <Text style={styles.txtRegular}>
+                      {Math.round(weatherData?.main.feels_like - 273.15)}°C
+                    </Text>
+                  </View>
+
+                  <View style={styles.tempMainContainer}>
+                    <View style={styles.tempMinMaxContainer}>
+                      <Text style={styles.txtRegular}>Min Temp: </Text>
+                      <Text style={styles.txtRegular}>
+                        {Math.round(weatherData?.main.temp_min - 273.15)}°C
+                      </Text>
+                    </View>
+                    <Text style={styles.txtRegular}>|</Text>
+                    <View style={styles.tempMinMaxContainer}>
+                      <Text style={styles.txtRegular}>Max Temp: </Text>
+                      <Text style={styles.txtRegular}>
+                        {Math.round(weatherData?.main.temp_max - 273.15)}°C
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
             </View>
           </>
         ) : (
           <ActivityIndicator size="large" />
         )}
       </View>
-      <View style={styles.featureContainer}>
-        <View style={styles.rowContainer}>
-          {!loading ? (
-            <>
-              <Text style={styles.txtFeaturesTitle}> Wind Status</Text>
-              <Image style={styles.imgWeather} source={windIcon} />
-              <Text style={styles.txtFeatures}>
-                {Math.round(weatherData?.wind.speed)} km/hr
-              </Text>
-            </>
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
+
+      {/* Other weather info */}
+      <View style={styles.featureMainContainer}>
+        <View style={styles.row1Container}>
+          <View style={styles.columnContainer}>
+            <View style={styles.redContainer}>
+              <Text style={styles.txtFeaturesTitle}>Wind Status</Text>
+            </View>
+            <View style={styles.whiteContainer}>
+              {!loading ? (
+                <>
+                  <View style={styles.txtRowContainer}>
+                    <WindStatus />
+                    <Text style={styles.txtFeatures}>
+                      {Math.round(weatherData?.wind.speed)} km/hr
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
+            </View>
+          </View>
+
+          <View style={styles.columnContainer}>
+            <View style={styles.redContainer}>
+              <Text style={styles.txtFeaturesTitle}>Humidity</Text>
+            </View>
+            <View style={styles.whiteContainer}>
+              {!loading ? (
+                <>
+                  <View style={styles.txtRowContainer}>
+                    <Humidity />
+                    <Text style={styles.txtFeatures}>
+                      {Math.round(weatherData?.main.humidity)}%
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
+            </View>
+          </View>
         </View>
-        <View style={styles.rowContainer}>
-          {!loading ? (
-            <>
-              <Text style={styles.txtFeaturesTitle}> Humidity</Text>
-              <Image style={styles.imgWeather} source={humidityIcon} />
-              <Text style={styles.txtFeatures}>
-                {Math.round(weatherData?.main.humidity)}%
-              </Text>
-            </>
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
-        </View>
-      </View>
-      <View style={styles.featureContainer}>
-        <View style={styles.rowContainer}>
-          {!loading ? (
-            <>
-              <Text style={styles.txtFeaturesTitle}> Air Pressure</Text>
-              <Image style={styles.imgWeather} source={airPressureIcon} />
-              <Text style={styles.txtFeatures}>
-                {Math.round(weatherData?.main.pressure)}
-              </Text>
-            </>
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
-        </View>
-        <View style={styles.rowContainer}>
-          {!loading ? (
-            <>
-              <Text style={styles.txtFeaturesTitle}> Visibility</Text>
-              <Image style={styles.imgWeather} source={visibilityIcon} />
-              <Text style={styles.txtFeatures}>
-                {Math.round(weatherData?.visibility)} mb
-              </Text>
-            </>
-          ) : (
-            <ActivityIndicator size="large" />
-          )}
+
+        {/* 2nd row other weather info */}
+        <View style={styles.row2Container}>
+          <View style={styles.columnContainer}>
+            <View style={styles.redContainer}>
+              <Text style={styles.txtFeaturesTitle}>Air Pressure</Text>
+            </View>
+            <View style={styles.whiteContainer}>
+              {!loading ? (
+                <>
+                  <View style={styles.txtRowContainer}>
+                    <AirPressure />
+                    <Text style={styles.txtFeatures}>
+                      {Math.round(weatherData?.main.pressure)} hPa
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
+            </View>
+          </View>
+
+          <View style={styles.columnContainer}>
+            <View style={styles.redContainer}>
+              <Text style={styles.txtFeaturesTitle}>Visibility</Text>
+            </View>
+            <View style={styles.whiteContainer}>
+              {!loading ? (
+                <>
+                  <View style={styles.txtRowContainer}>
+                    <Visibility />
+                    <Text style={styles.txtFeatures}>
+                      {Math.round(weatherData?.visibility / 1000)} km
+                    </Text>
+                  </View>
+                </>
+              ) : (
+                <ActivityIndicator size="large" />
+              )}
+            </View>
+          </View>
         </View>
       </View>
     </View>
@@ -196,29 +292,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.tertiary,
     marginTop: statusBarHeight,
   },
-  hamburgerMenuIcon: {
-    // marginTop: 24,
-    // marginTop: "3.09%",
-    marginTop: screenHeight * 0.0309,
-    marginBottom: screenHeight * 0.0309,
-    // marginLeft: 16,
-    // marginLeft: "4.44%",
-    marginLeft: screenWidth * 0.04,
+  bannerContainer: {
+    position: "relative",
+    // 160 is what percent of 728 = 21.98%
+    height: screenHeight * 0.2198,
+    width: "100%",
   },
   banner: {
-    // height: 77,
-    height: screenHeight * 0.1,
-    // height: "9.92%",
-    width: "100%",
-    marginBottom: 10,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.white,
-    borderTopColor: colors.tertiary,
-    // borderTopWidth: 50,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    // borderWidth: 0.5,
+    // 160 is what percent of 184 = 85.9565%
+    height: "86.9565%",
+    width: "100%",
+    backgroundColor: colors.primary,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -228,118 +313,229 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  txtTitle: {
-    fontSize: 39,
+  bannerHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    // 320 is what percent of 360 = 88.89%
+    width: screenWidth * 0.8889,
+    // 24 is what percent of 728 = 3.3%%
+    marginTop: screenHeight * 0.033,
+  },
+  hamburgerMenu: {},
+  weatherTodayText: {
     fontFamily: "LatoBold",
-    color: colors.black75,
+    fontSize: 31,
+    color: colors.white,
+  },
+  temperatureContainer: {
+    position: "absolute",
+    zIndex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    // 320 is what percent of 360 = 88.89%
+    width: screenWidth * 0.8889,
+    // 69 is what percent of 728 = 9.48%
+    top: screenHeight * 0.0948,
+    // 24 is what percent of 360 = 6.67%
+    right: screenWidth * 0.0667,
+  },
+  temperatureText: {
+    fontFamily: "LatoBold",
+    fontSize: 49,
+    color: colors.white,
+    // 8 is what percent of 360 = 2.22%
+    marginRight: screenWidth * 0.022,
+  },
+  bannerWave: {
+    position: "absolute",
+    // 64 is what percent of 728 = 8.79%
+    top: screenHeight * 0.0879,
+  },
+  searchContainer: {
+    // 24 is what percent of 728 = 3.3%
+    marginTop: screenHeight * 0.033,
+    // // height: 40
+    height: screenHeight * 0.0549,
+    // // width: 312
+    width: screenWidth * 0.867,
+    paddingHorizontal: 16,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignSelf: "center",
+    alignItems: "center",
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderRadius: 24,
   },
   weatherContainer: {
-    alignSelf: "center",
-    // marginTop: 24,
-    // marginTop: "2.06%",
-    marginTop: screenHeight * 0.0206,
-    // height: 280,
-    height: screenHeight * 0.3608,
-    // height: "36.08%",
-    // width: 297,
-    width: screenWidth * 0.825,
-    // width: "82.5%",
-    borderWidth: 0.5,
+    // marginTop: 16,
+    marginTop: screenHeight * 0.022,
+    // height: 208,
+    height: screenHeight * 0.286,
+    // width: 280,
+    width: screenWidth * 0.778,
     backgroundColor: colors.primary,
     justifyContent: "center",
+    alignSelf: "center",
     alignItems: "center",
-    borderRadius: 16,
-    borderColor: colors.black5,
-    borderWidth: 1,
+    borderRadius: 24,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  weatherTxtContainer: {
+    // marginTop: 8,
+    marginTop: screenHeight * 0.011,
+    // width: 280,
+    width: screenWidth * 0.778,
+    justifyContent: "center",
+    flexDirection: "row",
+    // borderWidth: 1,
+    // borderColor: "white",
   },
   tempMainContainer: {
+    // marginTop: 16,
+    marginTop: screenHeight * 0.022,
+    // width: 224,
+    width: screenWidth * 0.622,
     alignSelf: "center",
-    // height: 80,
-    height: "28.57%",
-    width: "100%",
     justifyContent: "space-evenly",
-    alignItems: "flex-start",
     flexDirection: "row",
-    // backgroundColor: colors.white
+    // borderWidth: 1,
+    // borderColor: "white",
   },
-  tempMinContainer: {
-    justifyContent: "center",
+  tempMinMaxContainer: {
+    flexDirection: "row",
+    // borderWidth: 1,
+    // borderColor: "white",
+  },
+  featureMainContainer: {
+    //marginTop: 16,
+    marginTop: screenHeight * 0.02,
+    alignItems: "center",
+    flexDirection: "column",
+    // borderWidth: 1,
+    // borderColor: "red",
+  },
+  row1Container: {
+    // width: 264,
+    width: screenWidth * 0.73,
     alignItems: "center",
     flexDirection: "row",
-  },
-
-  tempMaxContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-
-  featureContainer: {
-    alignSelf: "center",
-    // marginTop: 24,
-    // marginTop: "2.06%",
-    marginTop: screenHeight * 0.0206,
-    // borderWidth: 0.5,
-    // height: 400,
-    height: screenHeight * 0.124,
-    // height: "41.24%",
-    // width: 297,
-    width: screenWidth * 0.825,
-    // width: "82.5%",
     justifyContent: "space-between",
-    padding: 20,
+    // borderWidth: 1,
+    // borderColor: "blue",
+  },
+  row2Container: {
+    //marginTop: 16,
+    marginTop: screenHeight * 0.02,
+    // width: 264,
+    width: screenWidth * 0.73,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // borderWidth: 1,
+    // borderColor: "violet",
+  },
+  columnContainer: {
+    alignItems: "center",
+  },
+  whiteContainer: {
+    alignItems: "center",
+    // height: 48,
+    height: screenHeight * 0.066,
+    // width: 120,
+    width: screenWidth * 0.333,
+    backgroundColor: colors.white,
+    justifyContent: "center",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  redContainer: {
+    // height: 32,
+    height: screenHeight * 0.044,
+    // width: 120,
+    width: screenWidth * 0.333,
+    backgroundColor: colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+
+  txtRowContainer: {
     alignItems: "center",
     flexDirection: "row",
   },
-  rowContainer: {
-    alignSelf: "center",
-    // height: 400,
-    height: screenHeight * 0.13,
-    // height: "41.24%",
-    // width: 297,
-    width: screenWidth * 0.325,
-    // width: "82.5%",
-    borderWidth: 0.5,
-    backgroundColor: colors.tempColor,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 16,
-    borderColor: colors.black5,
-    borderWidth: 1,
+
+  imgTemp: {
+    height: 64,
+    width: 40,
+    resizeMode: "contain",
+  },
+  txtTemp: {
+    fontSize: 29,
+    fontFamily: "LatoBold",
+    color: colors.white,
+    paddingRight: 16,
   },
   imgWeather: {
-    height: 50,
-    width: 50,
+    height: 35,
+    width: 35,
     resizeMode: "contain",
     alignItems: "center",
   },
-  city: {
-    fontSize: 28,
+  txtTitle: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.white,
+  },
+  txtInputCity: {
+    fontSize: 16,
     fontFamily: "LatoRegular",
     color: colors.tertiary,
-    // marginTop: 40,
-    marginTop: "14.29%",
+  },
+  city: {
+    fontSize: 16,
+    fontFamily: "LatoRegular",
+    color: colors.tertiary,
   },
   temp: {
-    fontSize: 116,
+    fontSize: 64,
     fontFamily: "LatoBold",
     color: colors.tertiary,
-    // marginTop: 8,
-    marginTop: "2.86%",
   },
-  txtMinMax: {
-    fontSize: 16,
-    fontFamily: "LatoBold",
+  txtRegular: {
+    fontSize: 13,
+    fontFamily: "LatoRegular",
     color: colors.tertiary,
   },
   txtFeaturesTitle: {
     fontSize: 16,
     fontFamily: "LatoBold",
-    color: colors.tempText,
+    color: colors.tertiary,
   },
   txtFeatures: {
     fontSize: 16,
     fontFamily: "LatoRegular",
     color: colors.tempText,
+    paddingLeft: 5,
   },
 });

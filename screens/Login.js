@@ -36,6 +36,7 @@ import {
 
 // assets
 import { yosbrix } from "../assets/index";
+import YosBrixLogo from "../assets/svg/Yosbrix Main Logo.svg";
 
 // ------------------------- MAIN CODE ------------------------- //
 const Login = () => {
@@ -90,7 +91,7 @@ const Login = () => {
         )}
         {Platform.OS === "ios" && <StatusBar style="dark" />}
         <View style={styles.banner}>
-          <Image style={styles.logo} source={yosbrix} />
+          <YosBrixLogo />
         </View>
         <View style={styles.form}>
           {error && (
