@@ -29,11 +29,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "notification":{
+      "icon": "./assets/notif-icon.png"
+    },
     "plugins": [
       [
-        "expo-location",
+        "expo-notifications",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow YosBrix to use your location."
+          "icon": "./assets/notif-icon.png",
+          "color": "#ffffff"
         }
       ]
     ]

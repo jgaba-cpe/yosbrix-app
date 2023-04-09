@@ -24,7 +24,6 @@ import {
 
 // assets
 import {
-  hamburgerMenuIcon,
   step0Image,
   step1Image,
   step2Image,
@@ -87,7 +86,7 @@ const MachineManual = () => {
       </View>
       {/* ---------------------- STEPS ---------------------- */}
       <YosbrixFaded style={styles.yosbrixFaded} />
-      <ScrollView showsVerticalScrollIndicator="false">
+      <ScrollView>
         <View style={styles.stepContainer}>
           <View style={styles.top}>
             <Text style={styles.titleText}>PREPARE THE MATERIALS</Text>

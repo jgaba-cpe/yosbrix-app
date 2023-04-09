@@ -7,7 +7,6 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
 // navigation
@@ -23,7 +22,6 @@ import {
 
 // assets
 import {
-  hamburgerMenuBrownIcon,
   yosbrix,
   gaba,
   garcia,

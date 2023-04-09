@@ -1,4 +1,4 @@
-import "react-native-gesture-handler";
+// import "react-native-gesture-handler";
 import { LogBox } from "react-native";
 import { AuthContextProvider } from "./context/AuthContext";
 import AppNavigation from "./AppNavigation";

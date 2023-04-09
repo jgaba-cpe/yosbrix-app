@@ -25,7 +25,6 @@ import {
 
 // assets
 import {
-  hamburgerMenuIcon,
   brickImage,
   brickImage2,
   brickImage3,
@@ -291,14 +290,14 @@ const styles = StyleSheet.create({
     // width: 91.11%
     // backgroundColor: colors.primary,
     // borderWidth: 0.5,
-    borderRadius: 10,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.17,
-    shadowRadius: 3.05,
-    elevation: 4,
+    // borderRadius: 10,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 3,
+    // },
+    // shadowOpacity: 0.17,
+    // shadowRadius: 3.05,
+    // elevation: 4,
   },
 
   information: {
@@ -323,12 +322,13 @@ const styles = StyleSheet.create({
   },
 
   benefitsTitle: {
+    textAlign: "center",
     fontFamily: "LatoBold",
     fontSize: 16,
     color: colors.white,
     marginTop: "5.71%",
-    marginLeft: "4.87%",
-    marginRight: "4.87%",
+    // marginLeft: "4.87%",
+    // marginRight: "4.87%",
   },
 
   whiteContainer: {
@@ -380,12 +380,13 @@ const styles = StyleSheet.create({
   },
 
   materialsTitle: {
+    textAlign: "center",
     fontFamily: "LatoBold",
     fontSize: 16,
     color: colors.white,
     marginTop: "5.71%",
-    marginLeft: "4.87%",
-    marginRight: "4.87%",
+    // marginLeft: "4.87%",
+    // marginRight: "4.87%",
   },
   materialsContent: {
     fontFamily: "LatoRegular",

@@ -33,23 +33,7 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import {
-  logoIcon,
-  hamburgerMenuIcon,
-  totalBrickIcon,
-  doubleArrowIcon,
-  doubleArrowSmallIcon,
-  gearIcon,
-  notificationOffIcon,
-  notificationIcon,
-  checkIcon,
-  standbyIcon,
-  shredder,
-  mixer,
-  molder,
-  goal,
-  idle,
-} from "../assets/index";
+import { shredder, mixer, molder, goal, idle } from "../assets/index";
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
 import LogoIcon from "../assets/svg/Logo Icon.svg";
@@ -60,11 +44,15 @@ import Gear from "../assets/svg/Gear Icon.svg";
 import NotificationOn from "../assets/svg/Notifications On.svg";
 import NotificationOff from "../assets/svg/Notifications Off.svg";
 
+// animations
+import { MotiView } from "moti";
+
 // ------------------------- MAIN CODE ------------------------- //
 const Dashboard = () => {
   const [count, setCount] = useState(0);
   const [currentProcess, setCurrentProcess] = useState("");
   const [machineTemp, setMachineTemp] = useState(0);
+  const [notification, setNofication] = useState(true);
 
   // Local Notification
   const { showNotification } = useLocalNotification();
@@ -131,16 +119,18 @@ const Dashboard = () => {
 
   // Algo
   useEffect(() => {
-    if (currentProcess === "Mixing") {
+    if (currentProcess === "Mixing" && notification === true) {
       showNotification("Shredding is finished!");
     }
 
-    if (currentProcess === "Molding") {
+    if (currentProcess === "Molding" && notification === true) {
       showNotification("Mixing is finished!");
     }
 
     if (currentProcess === "Finished") {
-      showNotification("Molding is finished!");
+      if (notification === true) {
+        showNotification("Molding is finished!");
+      }
       updateCounter();
       updateHistory();
       setTimeout(updateProcessToIdle, 3000);
@@ -189,21 +179,36 @@ const Dashboard = () => {
             <Text style={styles.dashboardText}>Dashboard</Text>
           </View>
         </View>
-        <View style={styles.greetingsContainer}>
+        <MotiView
+          from={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 750 }}
+          style={styles.greetingsContainer}
+        >
           <Text style={styles.greetingsText}>
             Hi, {user ? user.displayName : "User"}!
           </Text>
-        </View>
+        </MotiView>
         <View style={styles.bannerWave}>
           <Wave height={bannerWaveHeight} />
         </View>
-        <View style={styles.tag}>
+        <MotiView
+          from={{ opacity: 0, translateX: -50 }}
+          animate={{ opacity: 1, translateX: 0 }}
+          transition={{ delay: 750 }}
+          style={styles.tag}
+        >
           <LogoIcon style={styles.yosbrixLogo} />
           <Text style={styles.yosbrixText}>YosBrix</Text>
-        </View>
+        </MotiView>
       </View>
       {/* ---------------------- WIDGETS ---------------------- */}
-      <View style={styles.widgetsContainer}>
+      <MotiView
+        from={{ opacity: 0, translateY: 50 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ delay: 500 }}
+        style={styles.widgetsContainer}
+      >
         <TouchableOpacity
           style={styles.totalBricks}
           onPress={() => {
@@ -233,16 +238,23 @@ const Dashboard = () => {
             <Text style={styles.systemBigText}>{machineTemp}°C</Text>
           </View>
         </View>
-      </View>
+      </MotiView>
       {/* ---------------------- PROCESS ---------------------- */}
-      <View style={styles.processContainer}>
+      <MotiView
+        from={{ opacity: 0, translateY: 50 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ delay: 750 }}
+        style={styles.processContainer}
+      >
         <View style={styles.top}>
           <View style={styles.topLeft}>
             <Text style={styles.currentProcessTitle}>Current Process</Text>
             <Gear />
           </View>
           <View style={styles.topRight}>
-            <NotificationOn />
+            <TouchableOpacity onPress={() => setNofication(!notification)}>
+              {notification ? <NotificationOn /> : <NotificationOff />}
+            </TouchableOpacity>
           </View>
         </View>
         {currentProcess === "Shredding" && (
@@ -266,16 +278,16 @@ const Dashboard = () => {
         {currentProcess === "Finished" && (
           <View style={styles.others}>
             <Text style={styles.finishedText}>Process finished</Text>
-            <Image source={goal} style={styles.finishedGif}/>
+            <Image source={goal} style={styles.finishedGif} />
           </View>
         )}
         {currentProcess === "Idle" && (
           <View style={styles.others}>
-          <Text style={styles.idleText}>No current process</Text>
-          <Image source={idle} style={styles.idleGif}/>
-        </View>
+            <Text style={styles.idleText}>No current process</Text>
+            <Image source={idle} style={styles.idleGif} />
+          </View>
         )}
-      </View>
+      </MotiView>
     </View>
   );
 };
@@ -610,7 +622,6 @@ const styles = StyleSheet.create({
   others: {
     justifyContent: "center",
     alignItems: "center",
-
   },
   finishedText: {
     fontSize: 31,
@@ -619,7 +630,7 @@ const styles = StyleSheet.create({
     // 16 is what percent of 232 = 6.9%
     // 8 is what percent of 232 = 3.45%
     marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
-  }, 
+  },
   finishedGif: {
     height: 104,
     width: 104,
@@ -631,9 +642,9 @@ const styles = StyleSheet.create({
     // 16 is what percent of 232 = 6.9%
     // 8 is what percent of 232 = 3.45%
     marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
-  }, 
+  },
   idleGif: {
     height: 104,
     width: 104,
-  }
+  },
 });

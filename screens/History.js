@@ -27,7 +27,6 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import { hamburgerMenuBrownIcon, calendarIcon } from "../assets/index";
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
 import TotalBrickIcon from "../assets/svg/Total Brick Icon.svg";
@@ -156,7 +155,7 @@ const History = () => {
           <Text style={styles.subText}>Number of Bricks Molded per Day</Text>
         </View>
         <View style={styles.bottom}>
-          <ScrollView showsVerticalScrollIndicator="false">
+          <ScrollView>
             {historyData &&
               historyData.map((item) => (
                 <View style={styles.itemContainer} key={item.currentDate}>

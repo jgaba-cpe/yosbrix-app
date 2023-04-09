@@ -12,9 +12,6 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
-// import WeatherSearch from "./WeatherSearch";
-import { EvilIcons } from "@expo/vector-icons";
-
 // navigation
 import { useNavigation } from "@react-navigation/native";
 
@@ -33,14 +30,6 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import {
-  hamburgerMenuIcon,
-  airPressureIcon,
-  windIcon,
-  humidityIcon,
-  visibilityIcon,
-  tempIcon,
-} from "../assets/index";
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
 import WeatherIcon from "../assets/svg/Weather Icon.svg";

@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  Image,
   ActivityIndicator,
   Keyboard,
 } from "react-native";
@@ -35,8 +34,10 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import { yosbrix } from "../assets/index";
 import YosBrixLogo from "../assets/svg/Yosbrix Main Logo.svg";
+
+// animations
+import { MotiView } from "moti";
 
 // ------------------------- MAIN CODE ------------------------- //
 const Login = () => {
@@ -91,7 +92,13 @@ const Login = () => {
         )}
         {Platform.OS === "ios" && <StatusBar style="dark" />}
         <View style={styles.banner}>
-          <YosBrixLogo />
+          <MotiView
+            from={{ opacity: 0, translateY: -50 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ delay: 100 }}
+          >
+            <YosBrixLogo />
+          </MotiView>
         </View>
         <View style={styles.form}>
           {error && (
