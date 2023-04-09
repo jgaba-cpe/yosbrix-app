@@ -18,18 +18,20 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jgaba15.yosbrixapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.jgaba15.yosbrixapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "notification":{
+    "notification": {
       "icon": "./assets/notif-icon.png"
     },
     "plugins": [
@@ -40,6 +42,11 @@
           "color": "#ffffff"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5f12dd23-1bfb-46fb-81e3-fc39bd533b02"
+      }
+    }
   }
 }
