@@ -122,17 +122,19 @@ const BrickDetails = () => {
         </View>
         <View style={styles.whiteContainer}>
           <Text style={styles.benefitsContent}>
-            1. Compressive strength is more than 85 percent lower than that of
-            normal bricks.
+            1. It gets that waste out of the environment.
           </Text>
           <Text style={styles.benefitsContent}>
-            2. Water absorption increases as cigarette butt content increases.
+            2. It makes bricks cheaper.
           </Text>
           <Text style={styles.benefitsContent}>
-            3. Porosity and contraction of cigarette butt bricks are minimal.
+            3. Less energy-intensive bricks can be produced.
           </Text>
           <Text style={styles.benefitsContent}>
-            4. Lightweight and have a high insulating capacity.
+            4. The energy needed to fire bricks can be cut by up to 58%.
+          </Text>
+          <Text style={styles.benefitsLinkContent}>
+            Source: https://theconstructor.org/building/cigarette-butt-bricks/29224/?amp=1
           </Text>
         </View>
         {/* ---------------------- MATERIALS ---------------------- */}
@@ -147,13 +149,13 @@ const BrickDetails = () => {
             materials are for 2 bricks only:
           </Text>
           <Text style={styles.materialsContent}>
-            1. 2.70 kilograms of Terracotta Clay.
+            1. 3 kilograms of Terracotta Clay.
           </Text>
           <Text style={styles.materialsContent}>
-            2. 270 mililliters of Water.
+            2. 250 mililliters of Water.
           </Text>
           <Text style={styles.materialsContent}>
-            3. 27 grams of Cigarette Butts.
+            3. 30 grams of Cigarette Butts.
           </Text>
         </View>
       </ScrollView>
@@ -333,8 +335,8 @@ const styles = StyleSheet.create({
 
   whiteContainer: {
     alignContent: "center",
-    // 264 is what percent of 728 = 36.26%
-    height: screenHeight * 0.3626,
+    // 256 is what percent of 728 = 35.16%
+    height: screenHeight * 0.3516,
     // width: 120,
     width: screenWidth * 0.911,
     backgroundColor: colors.white,
@@ -353,7 +355,17 @@ const styles = StyleSheet.create({
   benefitsContent: {
     fontFamily: "LatoRegular",
     fontSize: 16,
-    color: colors.black100,
+    color: colors.black75,
+    marginTop: "5.71%",
+    marginLeft: "4.87%",
+    marginRight: "4.87%",
+  },
+
+  benefitsLinkContent: {
+    fontFamily: "LatoRegular",
+    fontSize: 12,
+    fontStyle: "italic",
+    color: colors.secondary,
     marginTop: "5.71%",
     marginLeft: "4.87%",
     marginRight: "4.87%",
@@ -391,7 +403,7 @@ const styles = StyleSheet.create({
   materialsContent: {
     fontFamily: "LatoRegular",
     fontSize: 16,
-    color: colors.black100,
+    color: colors.black75,
     marginTop: "5.71%",
     marginLeft: "4.87%",
     marginRight: "4.87%",

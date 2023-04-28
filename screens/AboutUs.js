@@ -30,6 +30,7 @@ import {
 } from "../assets/index";
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
+import YosBrixLogo from "../assets/svg/Yosbrix Main Logo.svg";
 
 // ------------------------- MAIN CODE ------------------------- //
 const AboutUs = () => {
@@ -79,11 +80,9 @@ const AboutUs = () => {
       </View>
       {/* ---------------------- SCROLL VIEW ---------------------- */}
       <View style={styles.logoContainer}>
-        <Image style={styles.logo} source={yosbrix} />
+        <YosBrixLogo style={styles.logo} />
         <Text style={styles.txtRegularLogo}>
           YosBrix is a mobile application that monitors
-        </Text>
-        <Text style={styles.txtRegularLogo}>
           the processes of brick molding
         </Text>
       </View>
@@ -91,7 +90,7 @@ const AboutUs = () => {
       <View style={styles.devMainContainer}>
         <View style={styles.columnContainer}>
           <View style={styles.redContainer}>
-            <Text style={styles.txtDevTitle}>Meet the Team</Text>
+            <Text style={styles.txtDevTitle}>The Developers</Text>
             <Text style={styles.txtDevTitle}></Text>
           </View>
           <View style={styles.whiteContainer}>
@@ -112,7 +111,7 @@ const AboutUs = () => {
                 <Text style={styles.txtElective}>System Administration</Text>
               </View>
 
-              <View style={styles.devContainer}>
+              <View style={styles.lastDevContainer}>
                 <Image style={styles.imgProfile} source={regio} />
                 <Text style={styles.txtDevName}>Clarissa Regio</Text>
                 <Text style={styles.txtElective}>System Administration</Text>
@@ -197,8 +196,8 @@ const styles = StyleSheet.create({
   logoContainer: {
     //marginTop: 16,
     marginTop: screenHeight * 0.022,
-    //height: 192
-    height: screenHeight * 0.264,
+    //height: 200
+    height: screenHeight * 0.2747,
     /// width: 328,
     width: screenWidth * 0.9111,
     backgroundColor: colors.white,
@@ -211,14 +210,6 @@ const styles = StyleSheet.create({
   logo: {
     // marginTop: 16
     marginTop: screenHeight * 0.022,
-    height: 120,
-    width: 120,
-    resizeMode: "contain",
-    alignSelf: "center",
-  },
-  columnContainer: {
-    alignItems: "center",
-    justifyContent: "center",
   },
   devMainContainer: {
     //marginTop: 16,
@@ -226,9 +217,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
   },
+  columnContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 0.5
+  },
   devContainer: {
     //marginTop: 16
     marginTop: screenHeight * 0.022,
+    //height: 176
+    height: screenHeight * 0.242,
+    // width: 176
+    width: screenWidth * 0.5,
+    flexDirection: "column",
+    alignItems: "center",
+    borderRadius: 16,
+    backgroundColor: colors.tertiary,
+    // borderColor: colors.primary,
+    // borderWidth: 2,
+  },
+  lastDevContainer: {
+    //marginTop: 16
+    marginTop: screenHeight * 0.022,
+    //marginBottom: 16
+    marginBottom: screenHeight * 0.022,
     //height: 176
     height: screenHeight * 0.242,
     // width: 176
@@ -253,8 +265,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 64,
     alignItems: "center",
-    // height: 289,
-    height: screenHeight * 0.352,
+    // height: 288,
+    height: screenHeight * 0.3956,
     // width: 360,
     width: screenWidth * 1,
     backgroundColor: colors.white,
@@ -281,7 +293,11 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   txtRegularLogo: {
-    fontSize: 16,
+    // margin: 16
+    marginTop: screenHeight * 0.022,
+    marginRight: screenHeight * 0.022,
+    marginLeft: screenHeight * 0.022,
+    fontSize: 14,
     fontFamily: "LatoRegular",
     color: colors.black75,
     textAlign: "center",

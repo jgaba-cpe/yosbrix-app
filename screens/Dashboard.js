@@ -15,6 +15,12 @@ import { useFonts } from "expo-font";
 // navigation
 import { useNavigation } from "@react-navigation/native";
 
+// HTTP library
+import axios from "axios";
+
+// ENV
+import { OPENWEATHER_API_KEY } from "@env";
+
 // auth context
 import { useAuthContext } from "../hooks/useAuthContext";
 
@@ -43,6 +49,8 @@ import DoubleArrowGray from "../assets/svg/Double Arrow Gray.svg";
 import Gear from "../assets/svg/Gear Icon.svg";
 import NotificationOn from "../assets/svg/Notifications On.svg";
 import NotificationOff from "../assets/svg/Notifications Off.svg";
+import Arrow from "../assets/svg/Arrow.svg";
+import Manual from "../assets/svg/Manual-DashboardIcon.svg";
 
 // animations
 import { MotiView } from "moti";
@@ -51,8 +59,11 @@ import { MotiView } from "moti";
 const Dashboard = () => {
   const [count, setCount] = useState(0);
   const [currentProcess, setCurrentProcess] = useState("");
-  const [machineTemp, setMachineTemp] = useState(0);
   const [notification, setNofication] = useState(true);
+
+  const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Local Notification
   const { showNotification } = useLocalNotification();
@@ -64,7 +75,7 @@ const Dashboard = () => {
   }-${date.getDate()}`;
   console.log(currentDate);
 
-  // Read "Counter/numberOfBricks", "Process/currentProcess" and "Counter/numberOfBricks" data from RTDB
+  // Read "Counter/numberOfBricks" and "Process/currentProcess" data from RTDB
   useEffect(() => {
     const counterRef = rtdb.ref("machine/" + "Counter/");
     counterRef.on("value", (snapshot) => {
@@ -76,12 +87,6 @@ const Dashboard = () => {
     processRef.on("value", (snapshot) => {
       const processData = snapshot.val();
       setCurrentProcess(processData.currentProcess);
-    });
-
-    const tempRef = rtdb.ref("machine/" + "Temp/");
-    tempRef.on("value", (snapshot) => {
-      const tempData = snapshot.val();
-      setMachineTemp(tempData.machineTemp);
     });
   }, []);
 
@@ -119,23 +124,54 @@ const Dashboard = () => {
 
   // Algo
   useEffect(() => {
+    if (currentProcess === "Shredding" && notification === true) {
+      showNotification("Shredding has started.");
+    }
+
     if (currentProcess === "Mixing" && notification === true) {
-      showNotification("Shredding is finished!");
+      showNotification("Shredding is finished. Mixing has started.");
+    }
+
+    if (currentProcess === "Dispensing" && notification === true) {
+      showNotification("Mixing is finished. Dispensing has started.");
+    }
+
+    if (currentProcess === "Transferring" && notification === true) {
+      showNotification("Dispensing is finished. Transferring has started.");
     }
 
     if (currentProcess === "Molding" && notification === true) {
-      showNotification("Mixing is finished!");
+      showNotification("Transferring is finished. Molding has started.");
     }
 
     if (currentProcess === "Finished") {
       if (notification === true) {
-        showNotification("Molding is finished!");
+        showNotification("Molding is finished. All processes are complete.");
       }
       updateCounter();
       updateHistory();
       setTimeout(updateProcessToIdle, 3000);
     }
   }, [currentProcess]);
+
+  // fetching current weather data in OpenAPI
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=Quezon City&appid=${OPENWEATHER_API_KEY}`
+        );
+        setWeatherData(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherData();
+  }, []);
 
   const { user } = useAuthContext();
 
@@ -230,13 +266,25 @@ const Dashboard = () => {
             }}
           >
             <Text style={styles.weatherNormalText}>Weather Today</Text>
-            <Text style={styles.weatherBigText}>30°C</Text>
+            {!loading ? (
+              <Text style={styles.weatherBigText}>
+                {Math.round(weatherData?.main.temp - 273.15)}°C
+              </Text>
+            ) : (
+              <ActivityIndicator size="small" />
+            )}
             <DoubleArrowGray style={styles.doubleArrowSmallIcon} />
           </TouchableOpacity>
-          <View style={styles.temperature}>
-            <Text style={styles.systemNormalText}>System Temp</Text>
-            <Text style={styles.systemBigText}>{machineTemp}°C</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.manual}
+            onPress={() => {
+              navigation.navigate("Machine Manual");
+            }}
+          >
+            <Text style={styles.manualNormalText}>Machine Manual</Text>
+            <Manual />
+            <DoubleArrowGray style={styles.doubleArrowSmallIcon} />
+          </TouchableOpacity>
         </View>
       </MotiView>
       {/* ---------------------- PROCESS ---------------------- */}
@@ -267,6 +315,26 @@ const Dashboard = () => {
           <View style={styles.bottom}>
             <Text style={styles.mixerText}>Mixing</Text>
             <Image source={mixer} style={styles.mixerGif} />
+          </View>
+        )}
+        {currentProcess === "Dispensing" && (
+          <View style={styles.others}>
+            <Text style={styles.othersText}>Dispensing</Text>
+            <View style={styles.othersGifContainer}>
+              <Image source={mixer} style={styles.dispensingGif1} />
+              <Arrow />
+              <Image source={molder} style={styles.dispensingGif2} />
+            </View>
+          </View>
+        )}
+        {currentProcess === "Transferring" && (
+          <View style={styles.others}>
+            <Text style={styles.othersText}>Transferring</Text>
+            <View style={styles.othersGifContainer}>
+              <Image source={mixer} style={styles.dispensingGif1} />
+              <Arrow />
+              <Image source={molder} style={styles.dispensingGif2} />
+            </View>
           </View>
         )}
         {currentProcess === "Molding" && (
@@ -476,7 +544,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  temperature: {
+  manual: {
     justifyContent: "space-evenly",
     alignItems: "center",
     // 96 is what percent of 200 = 48%
@@ -500,27 +568,23 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 13,
     color: colors.black75,
+    marginTop: "4.17%",
   },
   weatherBigText: {
     fontFamily: "LatoBold",
     fontSize: 39,
     color: colors.secondary,
   },
+  manualNormalText: {
+    fontFamily: "LatoRegular",
+    fontSize: 11,
+    color: colors.black75,
+    marginTop: "4.17%",
+  },
   doubleArrowSmallIcon: {
     alignSelf: "flex-end",
     marginRight: 16,
-  },
-  systemNormalText: {
-    fontFamily: "LatoRegular",
-    fontSize: 13,
-    color: colors.black75,
-  },
-  systemBigText: {
-    fontFamily: "LatoBold",
-    fontSize: 39,
-    color: colors.secondary,
-    // 16 is what percent of 728 = 0.022%
-    marginBottom: screenHeight * 0.022,
+    marginBottom: "4.17%",
   },
   // -------------------- PROCESS -------------------- //
   processContainer: {
@@ -622,6 +686,33 @@ const styles = StyleSheet.create({
   others: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  othersText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+  },
+  othersGifContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    // borderWidth: 0.5
+  },
+  dispensingGif1: {
+    height: 104,
+    width: 104,
+    // 48 is what percent of 328 = 14.63%
+    // marginRight: "14.63%",
+  },
+  dispensingGif2: {
+    height: 104,
+    width: 104,
+    // 48 is what percent of 328 = 14.63%
+    // marginRight: "14.63%",
   },
   finishedText: {
     fontSize: 31,

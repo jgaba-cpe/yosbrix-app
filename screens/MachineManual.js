@@ -94,9 +94,9 @@ const MachineManual = () => {
           <View style={styles.bottom}>
             <Image style={styles.step0gif} source={step0Image} />
             <View style={styles.textContainer}>
-              <Text style={styles.text}>1. 2.7 kg Terracotta Clay</Text>
-              <Text style={styles.text}>2. 270 ml Water</Text>
-              <Text style={styles.text}>3. 27 gm Cigarette Butts</Text>
+              <Text style={styles.text}>1. 3.0 kg Terracotta Clay</Text>
+              <Text style={styles.text}>2. 300 ml Water</Text>
+              <Text style={styles.text}>3. 30 g Cigarette Butts</Text>
             </View>
           </View>
         </View>
@@ -113,7 +113,7 @@ const MachineManual = () => {
             </View>
           </View>
         </View>
-        <View style={styles.stepContainer}>
+        {/* <View style={styles.stepContainer}>
           <View style={styles.top}>
             <Text style={styles.titleText}>ENTER THE PASSWORD</Text>
           </View>
@@ -126,7 +126,7 @@ const MachineManual = () => {
               <Text style={styles.text}>Press * to enter.</Text>
             </View>
           </View>
-        </View>
+        </View> */}
         <View style={styles.stepContainer}>
           <View style={styles.top}>
             <Text style={styles.titleText}>INTO THE MIXER</Text>
@@ -157,7 +157,7 @@ const MachineManual = () => {
             </View>
           </View>
         </View>
-        <View style={styles.stepContainer}>
+        <View style={styles.lastStepContainer}>
           <View style={styles.top}>
             <Text style={styles.titleText}>SEE THE NOTIFICATION</Text>
           </View>
@@ -264,6 +264,20 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.7556,
     // 24 is what percent of 728 = 3.3%
     marginTop: screenHeight * 0.033,
+    borderWidth: 2,
+    borderColor: colors.black5,
+    backgroundColor: colors.white,
+    borderRadius: 16,
+  },
+  lastStepContainer: {
+    // 152 is what percent of 728 = 20.88%
+    height: screenHeight * 0.2088,
+    // 272 is what percent of 360 = 75.56%
+    width: screenWidth * 0.7556,
+    // 24 is what percent of 728 = 3.3%
+    marginTop: screenHeight * 0.033,
+    // 24 is what percent of 728 = 3.3%
+    marginBottom: screenHeight * 0.033,
     borderWidth: 2,
     borderColor: colors.black5,
     backgroundColor: colors.white,

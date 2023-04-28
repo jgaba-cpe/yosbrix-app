@@ -51,43 +51,48 @@ const History = () => {
       const counterData = snapshot.val();
       setCount(counterData.numberOfBricks);
     });
-
+  
     const historyRef = rtdb.ref("machine/" + "History/");
     const listener = historyRef.on("value", (snapshot) => {
       const fetchedData = snapshot.val();
 
       // console.log(fetchedData) // JSON data from RTDB
-
+  
       const dataArr = [];
-
+  
       for (let key in fetchedData) {
         const [year, month, day] = fetchedData[key].currentDate.split("-");
         const currentDate = new Date(year, month - 1, day);
         const numberOfBricks = fetchedData[key].numberOfBricks;
-
+  
         const dateString = format(currentDate, "MMMM d, yyyy");
-
+  
         const object = {
           currentDate: dateString,
           numberOfBricks: numberOfBricks,
         };
-
+  
         dataArr.push(object);
       }
-
+  
+      // Sort the array based on the currentDate property
+      dataArr.sort((a, b) => {
+        return new Date(a.currentDate) - new Date(b.currentDate);
+      });
+  
       if (ascending) {
         setHistoryData(dataArr);
       } else {
         setHistoryData(dataArr.reverse());
       }
     });
-
+  
     return () => {
       // Unsubscribe from database updates when the component unmounts
       historyRef.off("value", listener);
     };
   }, [ascending]);
-
+  
   // console.log(historyData); // JSON converted to Array (Ascending) oldest to recent
   // console.log(historyData.reverse()) // // JSON converted to Array (Descending) recent to oldest
   const navigation = useNavigation();
