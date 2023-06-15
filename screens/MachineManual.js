@@ -94,9 +94,9 @@ const MachineManual = () => {
           <View style={styles.bottom}>
             <Image style={styles.step0gif} source={step0Image} />
             <View style={styles.textContainer}>
-              <Text style={styles.text}>1. 3.0 kg Terracotta Clay</Text>
-              <Text style={styles.text}>2. 300 ml Water</Text>
-              <Text style={styles.text}>3. 30 g Cigarette Butts</Text>
+              <Text style={styles.text}>1. 6.0 kg Terracotta Clay</Text>
+              <Text style={styles.text}>2. 600 ml Water</Text>
+              <Text style={styles.text}>3. 60 g Cigarette Butts</Text>
             </View>
           </View>
         </View>

@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   TextInput,
 } from "react-native";
+import Swiper from "react-native-swiper";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 
@@ -32,7 +33,6 @@ import {
 // assets
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
-import WeatherIcon from "../assets/svg/Weather Icon.svg";
 import WindStatus from "../assets/svg/Wind Status Icon.svg";
 import Humidity from "../assets/svg/Humidity Icon.svg";
 import AirPressure from "../assets/svg/Air Pressure Icon.svg";
@@ -46,6 +46,9 @@ const Weather = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Forecast
+  const [forecast, setForecast] = useState(null);
+
   const navigation = useNavigation();
 
   const fetchWeatherData = async (cityName) => {
@@ -55,6 +58,10 @@ const Weather = () => {
         `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
       );
       setWeatherData(response.data);
+      const forecastData = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
+      );
+      setForecast(forecastData.data.list.slice(0, 3)); // Get the first 3-hour forecast
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -65,8 +72,6 @@ const Weather = () => {
   useEffect(() => {
     fetchWeatherData("Quezon City");
   }, []);
-
-  // console.log(weatherData);
 
   if (Platform.OS === "ios") {
     console.log(`IOS | Width: ${screenWidth}, Height: ${screenHeight}`);
@@ -108,13 +113,22 @@ const Weather = () => {
         </View>
         <View style={styles.temperatureContainer}>
           {!loading ? (
-            <Text style={styles.temperatureText}>
-              {Math.round(weatherData?.main.temp - 273.15)}°C
-            </Text>
+            <>
+              <Text style={styles.temperatureText}>
+                {Math.round(weatherData?.main.temp - 273.15)}°C
+              </Text>
+              {weatherData && weatherData.weather && weatherData.weather[0] && (
+                <Image
+                  style={styles.weatherTodayIconImg}
+                  source={{
+                    uri: `https://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`,
+                  }}
+                />
+              )}
+            </>
           ) : (
             <ActivityIndicator size="large" />
           )}
-          <WeatherIcon />
         </View>
         <View style={styles.bannerWave}>
           <Wave height={bannerWaveHeight} />
@@ -181,93 +195,134 @@ const Weather = () => {
         )}
       </View>
 
-      {/* Other weather info */}
-      <View style={styles.featureMainContainer}>
-        <View style={styles.row1Container}>
-          <View style={styles.columnContainer}>
-            <View style={styles.redContainer}>
-              <Text style={styles.txtFeaturesTitle}>Wind Status</Text>
+      <Swiper showsButtons={true}>
+        {/* ------------ WEATHER MAIN FIRST SCREEN ------------ */}
+        <View style={styles.featureMainContainer}>
+          <View style={styles.row1Container}>
+            <View style={styles.columnContainer}>
+              <View style={styles.redContainer}>
+                <Text style={styles.txtFeaturesTitle}>Wind Status</Text>
+              </View>
+              <View style={styles.whiteContainer}>
+                {!loading ? (
+                  <>
+                    <View style={styles.txtRowContainer}>
+                      <WindStatus />
+                      <Text style={styles.txtFeatures}>
+                        {Math.round(weatherData?.wind.speed)} km/hr
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <ActivityIndicator size="large" />
+                )}
+              </View>
             </View>
-            <View style={styles.whiteContainer}>
-              {!loading ? (
-                <>
-                  <View style={styles.txtRowContainer}>
-                    <WindStatus />
-                    <Text style={styles.txtFeatures}>
-                      {Math.round(weatherData?.wind.speed)} km/hr
-                    </Text>
-                  </View>
-                </>
-              ) : (
-                <ActivityIndicator size="large" />
-              )}
+
+            <View style={styles.columnContainer}>
+              <View style={styles.redContainer}>
+                <Text style={styles.txtFeaturesTitle}>Humidity</Text>
+              </View>
+              <View style={styles.whiteContainer}>
+                {!loading ? (
+                  <>
+                    <View style={styles.txtRowContainer}>
+                      <Humidity />
+                      <Text style={styles.txtFeatures}>
+                        {Math.round(weatherData?.main.humidity)}%
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <ActivityIndicator size="large" />
+                )}
+              </View>
             </View>
           </View>
 
-          <View style={styles.columnContainer}>
-            <View style={styles.redContainer}>
-              <Text style={styles.txtFeaturesTitle}>Humidity</Text>
+          {/* 2nd row other weather info */}
+          <View style={styles.row2Container}>
+            <View style={styles.columnContainer}>
+              <View style={styles.redContainer}>
+                <Text style={styles.txtFeaturesTitle}>Air Pressure</Text>
+              </View>
+              <View style={styles.whiteContainer}>
+                {!loading ? (
+                  <>
+                    <View style={styles.txtRowContainer}>
+                      <AirPressure />
+                      <Text style={styles.txtFeatures}>
+                        {Math.round(weatherData?.main.pressure)} hPa
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <ActivityIndicator size="large" />
+                )}
+              </View>
             </View>
-            <View style={styles.whiteContainer}>
-              {!loading ? (
-                <>
-                  <View style={styles.txtRowContainer}>
-                    <Humidity />
-                    <Text style={styles.txtFeatures}>
-                      {Math.round(weatherData?.main.humidity)}%
-                    </Text>
-                  </View>
-                </>
-              ) : (
-                <ActivityIndicator size="large" />
-              )}
+
+            <View style={styles.columnContainer}>
+              <View style={styles.redContainer}>
+                <Text style={styles.txtFeaturesTitle}>Visibility</Text>
+              </View>
+              <View style={styles.whiteContainer}>
+                {!loading ? (
+                  <>
+                    <View style={styles.txtRowContainer}>
+                      <Visibility />
+                      <Text style={styles.txtFeatures}>
+                        {Math.round(weatherData?.visibility / 1000)} km
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <ActivityIndicator size="large" />
+                )}
+              </View>
             </View>
           </View>
         </View>
+        {/* ------------ WEATHER MAIN SECOND SCREEN ------------ */}
+        <View style={styles.forecastMainContainer}>
+          <View style={styles.forecastWhiteContainer}>
+            {forecast ? (
+              forecast.map((entry, index) => {
+                const dateForecast = new Date(entry.dt * 1000);
+                const hourForecast = dateForecast.getHours();
+                const formattedHour =
+                  hourForecast > 12
+                    ? (hourForecast - 12).toString().padStart(2) + " PM"
+                    : hourForecast.toString().padStart(2) + " AM";
+                const key = `${entry.dt}-${index}`; // Generate unique key using timestamp and index
 
-        {/* 2nd row other weather info */}
-        <View style={styles.row2Container}>
-          <View style={styles.columnContainer}>
-            <View style={styles.redContainer}>
-              <Text style={styles.txtFeaturesTitle}>Air Pressure</Text>
-            </View>
-            <View style={styles.whiteContainer}>
-              {!loading ? (
-                <>
-                  <View style={styles.txtRowContainer}>
-                    <AirPressure />
-                    <Text style={styles.txtFeatures}>
-                      {Math.round(weatherData?.main.pressure)} hPa
+                return (
+                  <View key={key} style={styles.forecastBrownContainer}>
+                    <Text style={styles.txtTimeTemp}>{formattedHour} </Text>
+                    <View style={styles.forecastIconContainer}>
+                      <Image
+                        style={styles.forecastIconImage}
+                        source={{
+                          uri: `https://openweathermap.org/img/w/${entry.weather[0].icon}.png`,
+                        }}
+                      />
+                      <Text style={styles.txtDesc}>
+                        {entry.weather[0].description}
+                      </Text>
+                    </View>
+
+                    <Text style={styles.txtTimeTemp}>
+                      {Math.round(entry.main.temp - 273.15)}°C
                     </Text>
                   </View>
-                </>
-              ) : (
-                <ActivityIndicator size="large" />
-              )}
-            </View>
-          </View>
-
-          <View style={styles.columnContainer}>
-            <View style={styles.redContainer}>
-              <Text style={styles.txtFeaturesTitle}>Visibility</Text>
-            </View>
-            <View style={styles.whiteContainer}>
-              {!loading ? (
-                <>
-                  <View style={styles.txtRowContainer}>
-                    <Visibility />
-                    <Text style={styles.txtFeatures}>
-                      {Math.round(weatherData?.visibility / 1000)} km
-                    </Text>
-                  </View>
-                </>
-              ) : (
-                <ActivityIndicator size="large" />
-              )}
-            </View>
+                );
+              })
+            ) : (
+              <ActivityIndicator size="large" />
+            )}
           </View>
         </View>
-      </View>
+      </Swiper>
     </View>
   );
 };
@@ -311,7 +366,7 @@ const styles = StyleSheet.create({
     // 24 is what percent of 728 = 3.3%%
     marginTop: screenHeight * 0.033,
   },
-  hamburgerMenu: {},
+
   weatherTodayText: {
     fontFamily: "LatoBold",
     fontSize: 31,
@@ -332,10 +387,19 @@ const styles = StyleSheet.create({
   },
   temperatureText: {
     fontFamily: "LatoBold",
-    fontSize: 49,
+    fontSize: 45,
     color: colors.white,
     // 8 is what percent of 360 = 2.22%
     marginRight: screenWidth * 0.022,
+  },
+  weatherTodayIconImg: {
+    //marginTop: 8,
+    marginTop: screenHeight * 0.01,
+    // height: 64
+    height: screenHeight * 0.08,
+    // width: 64,
+    width: screenWidth * 0.178,
+    // borderColor: "violet",
   },
   bannerWave: {
     position: "absolute",
@@ -407,6 +471,8 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: "white",
   },
+
+  // Other Weather Info Screen
   featureMainContainer: {
     //marginTop: 16,
     marginTop: screenHeight * 0.02,
@@ -469,11 +535,55 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
   },
 
+  // Forecast Screen
+  forecastMainContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  forecastWhiteContainer: {
+    // marginTop: 4,
+    marginTop: screenHeight * 0.03,
+    // height: 176,
+    height: screenHeight * 0.22,
+    // width: 280,
+    width: screenWidth * 0.778,
+    backgroundColor: `rgba(255, 255, 255, 0.30)`,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderRadius: 8,
+  },
+  forecastBrownContainer: {
+    // height: 120
+    height: screenHeight * 0.188,
+    // width: 80,
+    width: screenWidth * 0.222,
+    alignItems: "center",
+    justifyContent: "space-around",
+    borderRadius: 8,
+    backgroundColor: colors.primary,
+  },
+  forecastIconContainer: {
+    // height: 70
+    height: screenHeight * 0.0875,
+    // width: 70,
+    width: screenWidth * 0.194,
+    alignItems: "center",
+    borderRadius: 8,
+    backgroundColor: "#C69083",
+  },
+  forecastIconImage: {
+    // height: 50
+    height: screenHeight * 0.0625,
+    // width: 50,
+    width: screenWidth * 0.139,
+  },
+
   txtRowContainer: {
     alignItems: "center",
     flexDirection: "row",
   },
-
   imgTemp: {
     height: 64,
     width: 40,
@@ -484,12 +594,6 @@ const styles = StyleSheet.create({
     fontFamily: "LatoBold",
     color: colors.white,
     paddingRight: 16,
-  },
-  imgWeather: {
-    height: 35,
-    width: 35,
-    resizeMode: "contain",
-    alignItems: "center",
   },
   txtTitle: {
     fontSize: 31,
@@ -526,5 +630,17 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     color: colors.tempText,
     paddingLeft: 5,
+  },
+
+  // Forecast Screen
+  txtTimeTemp: {
+    fontSize: 16,
+    fontFamily: "LatoBold",
+    color: colors.tertiary,
+  },
+  txtDesc: {
+    fontSize: 10,
+    fontFamily: "LatoBold",
+    color: colors.tertiary,
   },
 });

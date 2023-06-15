@@ -149,13 +149,13 @@ const BrickDetails = () => {
             materials are for 2 bricks only:
           </Text>
           <Text style={styles.materialsContent}>
-            1. 3 kilograms of Terracotta Clay.
+            1. 6 kilograms of Terracotta Clay.
           </Text>
           <Text style={styles.materialsContent}>
-            2. 250 mililliters of Water.
+            2. 600 mililliters of Water.
           </Text>
           <Text style={styles.materialsContent}>
-            3. 30 grams of Cigarette Butts.
+            3. 60 grams of Cigarette Butts.
           </Text>
         </View>
       </ScrollView>

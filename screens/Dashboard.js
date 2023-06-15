@@ -59,6 +59,7 @@ import { MotiView } from "moti";
 const Dashboard = () => {
   const [count, setCount] = useState(0);
   const [currentProcess, setCurrentProcess] = useState("");
+  const [moldedBricks, setMoldedBricks] = useState("");
   const [notification, setNofication] = useState(true);
 
   const [weatherData, setWeatherData] = useState(null);
@@ -88,18 +89,43 @@ const Dashboard = () => {
       const processData = snapshot.val();
       setCurrentProcess(processData.currentProcess);
     });
+
+    const molderRef = rtdb.ref("machine/" + "Molder/");
+    molderRef.on("value", (snapshot) => {
+      const molderData = snapshot.val();
+      setMoldedBricks(molderData.moldedBricks);
+    });
   }, []);
 
+  // Condition for determining the number of bricks to be added
+  const molderBricksValidator = (moldedBricks) => {
+    let finishedProduct;
+    if (moldedBricks === "2/2") {
+      finishedProduct = 2;
+    }
+    if (moldedBricks === "1/2") {
+      finishedProduct = 1;
+    }
+    if (moldedBricks === "0/2") {
+      finishedProduct = 0;
+    }
+    return finishedProduct;
+  };
+
   // Update the "Counter/numberOfBricks" data in RTDB
-  const updateCounter = () => {
+  const updateCounter = (moldedBricks) => {
+    const finishedProduct = molderBricksValidator(moldedBricks);
+
     const counterRef = rtdb.ref("machine/" + "Counter/" + "numberOfBricks");
     counterRef.transaction((currentCount) => {
-      return (currentCount || 0) + 2;
+      return (currentCount || 0) + finishedProduct;
     });
   };
 
   // Update the "History/`${currentDate}`/currentDate" and "History/`${currentDate}`/numberOfBricks" data in RTDB
-  const updateHistory = () => {
+  const updateHistory = (moldedBricks) => {
+    const finishedProduct = molderBricksValidator(moldedBricks);
+
     const historyRef1 = rtdb.ref(
       "machine/" + "History/" + `${currentDate}/` + "currentDate"
     );
@@ -110,7 +136,7 @@ const Dashboard = () => {
       "machine/" + "History/" + `${currentDate}/` + "numberOfBricks"
     );
     historyRef2.transaction((currentCount) => {
-      return (currentCount || 0) + 2;
+      return (currentCount || 0) + finishedProduct;
     });
   };
 
@@ -119,6 +145,14 @@ const Dashboard = () => {
     const processRef = rtdb.ref("machine/" + "Process/" + "currentProcess");
     processRef.transaction((currentProcess) => {
       return (currentProcess = "Idle");
+    });
+  };
+
+  // Update the "Molder/moldedBricks" data in RTDB
+  const resetMoldedBricks = () => {
+    const molderRef = rtdb.ref("machine/" + "Molder/" + "moldedBricks");
+    molderRef.transaction((moldedBricks) => {
+      return (moldedBricks = "0/2");
     });
   };
 
@@ -148,9 +182,10 @@ const Dashboard = () => {
       if (notification === true) {
         showNotification("Molding is finished. All processes are complete.");
       }
-      updateCounter();
-      updateHistory();
+      updateCounter(moldedBricks);
+      updateHistory(moldedBricks);
       setTimeout(updateProcessToIdle, 3000);
+      resetMoldedBricks();
     }
   }, [currentProcess]);
 
