@@ -95,8 +95,7 @@ const MachineManual = () => {
             <Image style={styles.step0gif} source={step0Image} />
             <View style={styles.textContainer}>
               <Text style={styles.text}>1. 6.0 kg Terracotta Clay</Text>
-              <Text style={styles.text}>2. 600 ml Water</Text>
-              <Text style={styles.text}>3. 60 g Cigarette Butts</Text>
+              <Text style={styles.text}>2. 30 g Cigarette Butts</Text>
             </View>
           </View>
         </View>
@@ -138,8 +137,8 @@ const MachineManual = () => {
               <Text style={styles.text}>be displayed in the LCD</Text>
               <Text style={styles.text}>screen. By this time, it's</Text>
               <Text style={styles.text}>advisable to put the</Text>
-              <Text style={styles.text}>terracotta clay and</Text>
-              <Text style={styles.text}>water in the mixer.</Text>
+              <Text style={styles.text}>terracotta clay in</Text>
+              <Text style={styles.text}>the mixer.</Text>
             </View>
           </View>
         </View>

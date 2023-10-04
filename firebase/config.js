@@ -7,7 +7,7 @@ import { FIREBASE_API_KEY } from "@env";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
+  apiKey: "AIzaSyBHtQiivm5K4i8eFAXuuDT0e6fcAz1marU",
   authDomain: "yosbrix-app.firebaseapp.com",
   databaseURL:
     "https://yosbrix-app-default-rtdb.asia-southeast1.firebasedatabase.app",

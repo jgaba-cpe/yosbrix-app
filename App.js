@@ -6,6 +6,7 @@ import AppNavigation from "./AppNavigation";
 LogBox.ignoreLogs(["AsyncStorage has been extracted from react-native core"]);
 LogBox.ignoreLogs(["expo-permissions is now deprecated"]);
 LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate`"]);
+LogBox.ignoreLogs(["Each child in a list should have a unique"]);
 
 export default function App() {
   return (

@@ -21,13 +21,7 @@ import {
 } from "../constants/LayoutTools";
 
 // assets
-import {
-  yosbrix,
-  gaba,
-  garcia,
-  marmito,
-  regio,
-} from "../assets/index";
+import { yosbrix, gaba, garcia, marmito, regio } from "../assets/index";
 import Wave from "../assets/svg/Wave";
 import Hamburger from "../assets/svg/Hamburger Menu Icon.svg";
 import YosBrixLogo from "../assets/svg/Yosbrix Main Logo.svg";
@@ -70,53 +64,56 @@ const AboutUs = () => {
           </View>
         </View>
         <View style={styles.subTextContainer}>
-          <Text style={styles.subText}>
-            Meet the Team
-          </Text>
+          <Text style={styles.subText}>Meet the Team</Text>
         </View>
         <View style={styles.bannerWave}>
           <Wave height={bannerWaveHeight} />
         </View>
       </View>
       {/* ---------------------- SCROLL VIEW ---------------------- */}
-      <View style={styles.logoContainer}>
+      {/* <View style={styles.logoContainer}>
         <YosBrixLogo style={styles.logo} />
         <Text style={styles.txtRegularLogo}>
           YosBrix is a mobile application that monitors
           the processes of brick molding
         </Text>
-      </View>
+      </View> */}
 
       <View style={styles.devMainContainer}>
-        <View style={styles.columnContainer}>
-          <View style={styles.redContainer}>
-            <Text style={styles.txtDevTitle}>The Developers</Text>
-            <Text style={styles.txtDevTitle}></Text>
-          </View>
-          <View style={styles.whiteContainer}>
-            <ScrollView>
-              <View style={styles.devContainer}>
-                <Image style={styles.imgProfile} source={gaba} />
-                <Text style={styles.txtDevName}>Jander Gaba</Text>
-                <Text style={styles.txtElective}>System Administration</Text>
-              </View>
-              <View style={styles.devContainer}>
-                <Image style={styles.imgProfile} source={garcia} />
-                <Text style={styles.txtDevName}>Mary Cris Garcia</Text>
-                <Text style={styles.txtElective}>Intelligent Systems</Text>
-              </View>
-              <View style={styles.devContainer}>
-                <Image style={styles.imgProfile} source={marmito} />
-                <Text style={styles.txtDevName}>Roxanne Marmito</Text>
-                <Text style={styles.txtElective}>System Administration</Text>
-              </View>
+        {/* <View style={styles.redContainer}> */}
+        <Text style={styles.txtDevTitle}>The Developers</Text>
+        <Text style={styles.txtDevTitle}></Text>
+        {/* </View> */}
+        {/* <View style={styles.whiteContainer}> */}
+        {/* <ScrollView> */}
+        <View style={styles.mainColumnContainer}>
+          <View style={styles.columnContainer1}>
+            <View style={styles.devContainer}>
+              <Image style={styles.imgProfile} source={gaba} />
+              <Text style={styles.txtDevName}>Jander Gaba</Text>
+              <Text style={styles.txtElective}>System Administration</Text>
+            </View>
 
-              <View style={styles.lastDevContainer}>
-                <Image style={styles.imgProfile} source={regio} />
-                <Text style={styles.txtDevName}>Clarissa Regio</Text>
-                <Text style={styles.txtElective}>System Administration</Text>
-              </View>
-            </ScrollView>
+            <View style={styles.devContainer}>
+              <Image style={styles.imgProfile} source={marmito} />
+              <Text style={styles.txtDevName}>Roxanne Marmito</Text>
+              <Text style={styles.txtElective}>System Administration</Text>
+            </View>
+
+            {/* </ScrollView> */}
+            {/* </View> */}
+          </View>
+          <View style={styles.columnContainer2}>
+            <View style={styles.devContainer}>
+              <Image style={styles.imgProfile} source={garcia} />
+              <Text style={styles.txtDevName}>Mary Cris Garcia</Text>
+              <Text style={styles.txtElective}>Intelligent Systems</Text>
+            </View>
+            <View style={styles.devContainer}>
+              <Image style={styles.imgProfile} source={regio} />
+              <Text style={styles.txtDevName}>Clarissa Regio</Text>
+              <Text style={styles.txtElective}>System Administration</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -213,26 +210,36 @@ const styles = StyleSheet.create({
   },
   devMainContainer: {
     //marginTop: 16,
-    marginTop: screenHeight * 0.02,
+    marginTop: screenHeight * 0.055,
     alignItems: "center",
     flexDirection: "column",
   },
-  columnContainer: {
+  mainColumnContainer: {
+    flexDirection: "row",
+  },
+  columnContainer1: {
     alignItems: "center",
     justifyContent: "center",
     // borderWidth: 0.5
+    marginRight: 10
+  },
+  columnContainer2: {
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 0.5
+    marginLeftt: 10
   },
   devContainer: {
     //marginTop: 16
     marginTop: screenHeight * 0.022,
     //height: 176
-    height: screenHeight * 0.242,
+    height: screenHeight * 0.24,
     // width: 176
-    width: screenWidth * 0.5,
+    width: screenWidth * 0.45,
     flexDirection: "column",
     alignItems: "center",
     borderRadius: 16,
-    backgroundColor: colors.tertiary,
+    backgroundColor: colors.offwhite,
     // borderColor: colors.primary,
     // borderWidth: 2,
   },
@@ -311,11 +318,11 @@ const styles = StyleSheet.create({
   },
   txtDevTitle: {
     // marginTop: 16
-    marginTop: screenHeight * 0.022,
+    // marginTop: screenHeight * 0.054,
     textAlign: "center",
     fontSize: 31,
     fontFamily: "LatoBold",
-    color: colors.tertiary,
+    color: colors.black75,
   },
   imgProfile: {
     //marginTop: 16
@@ -337,5 +344,4 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     color: colors.black75,
   },
-
 });

@@ -8,6 +8,7 @@ import {
   Platform,
   Image,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -51,6 +52,13 @@ import NotificationOn from "../assets/svg/Notifications On.svg";
 import NotificationOff from "../assets/svg/Notifications Off.svg";
 import Arrow from "../assets/svg/Arrow.svg";
 import Manual from "../assets/svg/Manual-DashboardIcon.svg";
+import Start from "../assets/svg/Start Icon.svg";
+import Stop from "../assets/svg/Stop Icon.svg";
+import Error from "../assets/svg/Error Icon.svg";
+import Alert from "../assets/svg/Alert Icon.svg";
+import Inform from "../assets/svg/Inform Icon.svg";
+import Scan from "../assets/svg/Scan Icon.svg";
+import ProcessFinished from "../assets/svg/Process Finished Icon.svg";
 
 // animations
 import { MotiView } from "moti";
@@ -61,6 +69,16 @@ const Dashboard = () => {
   const [currentProcess, setCurrentProcess] = useState("");
   const [moldedBricks, setMoldedBricks] = useState("");
   const [notification, setNofication] = useState(true);
+
+  const [state, setState] = useState("");
+  const [signal, setSignal] = useState("");
+  const [startingError, setStartingError] = useState("");
+  const [clearStartingErrorSignal, setClearStartingErrorSignal] = useState("");
+  const [dispensingError, setDispensingError] = useState("");
+  const [clearDispensingErrorSignal, setClearDispensingErrorSignal] =
+    useState("");
+  const [qualityChecking, setQualityChecking] = useState("");
+  const [qualityCheckingResult, setQualityCheckingResult] = useState("");
 
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
@@ -76,7 +94,7 @@ const Dashboard = () => {
   }-${date.getDate()}`;
   console.log(currentDate);
 
-  // Read "Counter/numberOfBricks" and "Process/currentProcess" data from RTDB
+  // Read "Counter/numberOfBricks", "Process/currentProcess" "Molder/moldedBricks" data from RTDB
   useEffect(() => {
     const counterRef = rtdb.ref("machine/" + "Counter/");
     counterRef.on("value", (snapshot) => {
@@ -94,6 +112,60 @@ const Dashboard = () => {
     molderRef.on("value", (snapshot) => {
       const molderData = snapshot.val();
       setMoldedBricks(molderData.moldedBricks);
+    });
+  }, []);
+
+  useEffect(() => {
+    const stateRef = rtdb.ref("machine/" + "Machine/");
+    stateRef.on("value", (snapshot) => {
+      const stateData = snapshot.val();
+      setState(stateData.state);
+    });
+
+    const signalRef = rtdb.ref("machine/" + "Machine/");
+    signalRef.on("value", (snapshot) => {
+      const signalData = snapshot.val();
+      setSignal(signalData.signal);
+    });
+
+    const startingErrorRef = rtdb.ref("machine/" + "Error/");
+    startingErrorRef.on("value", (snapshot) => {
+      const startingErrorData = snapshot.val();
+      setStartingError(startingErrorData.startingError);
+    });
+
+    const clearStartingErrorSignalRef = rtdb.ref("machine/" + "Error/");
+    clearStartingErrorSignalRef.on("value", (snapshot) => {
+      const clearStartingErrorSignalData = snapshot.val();
+      setClearStartingErrorSignal(
+        clearStartingErrorSignalData.clearStartingErrorSignal
+      );
+    });
+
+    const dispensingErrorRef = rtdb.ref("machine/" + "Error/");
+    dispensingErrorRef.on("value", (snapshot) => {
+      const dispensingErrorData = snapshot.val();
+      setDispensingError(dispensingErrorData.dispensingError);
+    });
+
+    const clearDispensingErrorSignalRef = rtdb.ref("machine/" + "Error/");
+    clearDispensingErrorSignalRef.on("value", (snapshot) => {
+      const clearDispensingErrorSignalData = snapshot.val();
+      setClearStartingErrorSignal(
+        clearDispensingErrorSignalData.clearDispensingErrorSignal
+      );
+    });
+
+    const qualityCheckingRef = rtdb.ref("machine/" + "RPI/");
+    qualityCheckingRef.on("value", (snapshot) => {
+      const qualityCheckingData = snapshot.val();
+      setQualityChecking(qualityCheckingData.qualityChecking);
+    });
+
+    const qualityCheckingResultRef = rtdb.ref("machine/" + "RPI/");
+    qualityCheckingResultRef.on("value", (snapshot) => {
+      const qualityCheckingResultData = snapshot.val();
+      setQualityCheckingResult(qualityCheckingResultData.qualityCheckingResult);
     });
   }, []);
 
@@ -153,6 +225,75 @@ const Dashboard = () => {
     const molderRef = rtdb.ref("machine/" + "Molder/" + "moldedBricks");
     molderRef.transaction((moldedBricks) => {
       return (moldedBricks = "0/2");
+    });
+  };
+
+  const sendStartSignal = () => {
+    const signalRef = rtdb.ref("machine/" + "Machine/" + "signal");
+    signalRef.transaction((currentValue) => {
+      return (currentValue = "Start");
+    });
+  };
+
+  const sendStopSignal = () => {
+    const signalRef = rtdb.ref("machine/" + "Machine/" + "signal");
+    signalRef.transaction((currentValue) => {
+      return (currentValue = "Stop");
+    });
+  };
+
+  const resetStartingError = () => {
+    const startingErrorRef = rtdb.ref("machine/" + "Error/" + "startingError");
+    startingErrorRef.transaction((currentValue) => {
+      return (currentValue = "None");
+    });
+
+    const clearStartingErrorSignalRef = rtdb.ref(
+      "machine/" + "Error/" + "clearStartingErrorSignal"
+    );
+    clearStartingErrorSignalRef.transaction((currentValue) => {
+      return (currentValue = "Clear");
+    });
+  };
+
+  const resetDispensingError = () => {
+    const dispensingErrorRef = rtdb.ref(
+      "machine/" + "Error/" + "dispensingError"
+    );
+    dispensingErrorRef.transaction((currentValue) => {
+      return (currentValue = "None");
+    });
+
+    const clearDispensingErrorSignalRef = rtdb.ref(
+      "machine/" + "Error/" + "clearDispensingErrorSignal"
+    );
+    clearDispensingErrorSignalRef.transaction((currentValue) => {
+      return (currentValue = "Clear");
+    });
+  };
+
+  const sendQualityCheckingStartSignal = () => {
+    const qualityCheckingRef = rtdb.ref(
+      "machine/" + "RPI/" + "qualityChecking"
+    );
+    qualityCheckingRef.transaction((currentValue) => {
+      return (currentValue = "Start");
+    });
+  };
+
+  const resetQualityCheckingResult = () => {
+    const qualityCheckingResultRef = rtdb.ref(
+      "machine/" + "RPI/" + "qualityCheckingResult"
+    );
+    qualityCheckingResultRef.transaction((currentValue) => {
+      return (currentValue = "None");
+    });
+
+    const clearQualityCheckingResultRef = rtdb.ref(
+      "machine/" + "RPI/" + "clearQualityCheckingResult"
+    );
+    clearQualityCheckingResultRef.transaction((currentValue) => {
+      return (currentValue = "Clear");
     });
   };
 
@@ -230,12 +371,235 @@ const Dashboard = () => {
   const bannerHeight = bannerContainerHeight * 0.869565;
   const bannerWaveHeight = bannerHeight * 0.6;
 
+  function startErrorDecoder(keys) {
+    const startingErrorObject = {
+      A: "Enough cigarette butts in the container",
+      1: "Not enough cigarette butts in the container",
+      2: "No cigarette butts in the container",
+      B: "The mixer door is closed",
+      3: "The mixer door is not closed",
+      C: "Enough clay in the mixer",
+      4: "Not enough clay in the mixer",
+      5: "No clay in the container",
+    };
+
+    const result = [];
+    const forbiddenKeys = ["A", "B", "C"];
+
+    if (keys !== "None") {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!forbiddenKeys.includes(key)) {
+          result.push(startingErrorObject[key]);
+        }
+      }
+
+      console.log(result);
+    }
+
+    return result;
+  }
+
+  function dispenseErrorDecoder(keys) {
+    const dispenseErrorObject = {
+      A: "Enough clay on Molder 2",
+      1: "Not enough clay on Molder 2",
+      2: "No clay on Molder 2",
+      B: "Enough clay on Molder 1",
+      3: "Not enough clay on Molder 1",
+      4: "No clay on Molder 1",
+    };
+
+    const result = [];
+    const forbiddenKeys = ["A", "B"];
+
+    if (keys !== "None") {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (!forbiddenKeys.includes(key)) {
+          result.push(dispenseErrorObject[key]);
+        }
+      }
+
+      console.log(result);
+    }
+
+    return result;
+  }
+
+  function qualityCheckingResultDecoder(keys) {
+    const qualityCheckingResultObject = {
+      1: "Molded Brick No.1: Good Quality",
+      2: "Molded Brick No.1: Bad Quality",
+      3: "Molded Brick No.2: Good Quality",
+      4: "Molded Brick No.2: Bad Quality",
+    };
+
+    const result = [];
+
+    if (keys !== "None") {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        result.push(qualityCheckingResultObject[key]);
+      }
+
+      console.log(result);
+    }
+
+    return result;
+  }
+
   return (
     <View style={styles.container}>
       {Platform.OS === "android" && (
         <StatusBar style="dark" backgroundColor={colors.white} />
       )}
       {Platform.OS === "ios" && <StatusBar style="dark" />}
+
+      {/* ---------------------- MODALS ---------------------- */}
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={
+          qualityCheckingResult !== "None" && qualityCheckingResult !== ""
+        }
+      >
+        <View style={styles.modalCenteredView}>
+          <View style={styles.summaryModalContainer}>
+            <ProcessFinished style={styles.summaryIcon} />
+            <View style={styles.summaryTitle}>
+              <Text style={styles.summaryTitleText}>Process Finished</Text>
+            </View>
+            <View style={styles.summarySubtitle}>
+              <Text style={styles.summarySubTitleText}>Summary</Text>
+            </View>
+            <View style={styles.summaryContent}>
+              {qualityCheckingResultDecoder(qualityCheckingResult).map(
+                (result) => (
+                  <Text style={styles.summaryContentText}>{result}</Text>
+                )
+              )}
+            </View>
+            <TouchableOpacity
+              style={styles.summaryButton}
+              onPress={() => resetQualityCheckingResult()}
+            >
+              <Text style={styles.summaryButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={
+          startingError !== "None" &&
+          startingError !== "ABC" &&
+          startingError !== ""
+        }
+      >
+        <View style={styles.modalCenteredView}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeaderContainer}>
+              <Error />
+            </View>
+            <View style={styles.modalBodyContainer}>
+              <View style={styles.errorTitle}>
+                <Text style={styles.errorTitleText}>ERROR!</Text>
+                <Text style={styles.errorSubTitleText}>
+                  The system will not start, the following error has been
+                  detected:
+                </Text>
+              </View>
+              <View style={styles.errorContent}>
+                {startErrorDecoder(startingError).map((error) => (
+                  <Text style={styles.errorContentText}>{error}</Text>
+                ))}
+              </View>
+              <TouchableOpacity
+                style={styles.errorButton}
+                onPress={() => resetStartingError()}
+              >
+                <Text style={styles.errorButtonText}>Okay</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={
+          dispensingError !== "None" &&
+          dispensingError !== "AB" &&
+          dispensingError !== ""
+        }
+      >
+        <View style={styles.modalCenteredView}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeaderContainer}>
+              <Alert />
+            </View>
+            <View style={styles.modalBodyContainer}>
+              <View style={styles.alertTitle}>
+                <Text style={styles.alertTitleText}>
+                  The dispensing process will restart.
+                </Text>
+              </View>
+              <Text style={styles.alertSubTitleText}>
+                The system has detected the following error:
+              </Text>
+              <View style={styles.alertContent}>
+                {dispenseErrorDecoder(dispensingError).map((error) => (
+                  <Text style={styles.alertContentText}>{error}</Text>
+                ))}
+              </View>
+              <TouchableOpacity
+                style={styles.alertButton}
+                onPress={() => resetDispensingError()}
+              >
+                <Text style={styles.alertButtonText}>Okay</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={qualityChecking === "Wait"}
+      >
+        <View style={styles.modalCenteredView}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeaderContainer}>
+              <Inform />
+            </View>
+            <View style={styles.modalBodyContainer}>
+              <View style={styles.informTitle}>
+                <Text style={styles.informTitleText}>
+                  Please unlock the molder before starting the checking process.
+                </Text>
+              </View>
+              <View style={styles.informContent}>
+                <Text style={styles.informContentText}>
+                  "Click the start button to begin"
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.informButton}
+                onPress={() => sendQualityCheckingStartSignal()}
+              >
+                <Text style={styles.informButtonText}>Start</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* ---------------------- BANNER ---------------------- */}
       <View style={styles.bannerContainer}>
         <View style={styles.banner}>
@@ -310,16 +674,25 @@ const Dashboard = () => {
             )}
             <DoubleArrowGray style={styles.doubleArrowSmallIcon} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.manual}
-            onPress={() => {
-              navigation.navigate("Machine Manual");
-            }}
-          >
-            <Text style={styles.manualNormalText}>Machine Manual</Text>
-            <Manual />
-            <DoubleArrowGray style={styles.doubleArrowSmallIcon} />
-          </TouchableOpacity>
+          {/* START and STOP button */}
+          {state === "Stopped" && (
+            <TouchableOpacity
+              style={styles.start}
+              onPress={() => sendStartSignal()}
+            >
+              <Text style={styles.startNormalText}>Start the Machine</Text>
+              <Start />
+            </TouchableOpacity>
+          )}
+          {state === "Started" && (
+            <TouchableOpacity
+              style={styles.stop}
+              onPress={() => sendStopSignal()}
+            >
+              <Text style={styles.stopNormalText}>Stop the Machine</Text>
+              <Stop />
+            </TouchableOpacity>
+          )}
         </View>
       </MotiView>
       {/* ---------------------- PROCESS ---------------------- */}
@@ -378,6 +751,31 @@ const Dashboard = () => {
             <Image source={molder} style={styles.molderGif} />
           </View>
         )}
+        {currentProcess === "TransferringToChecking" && (
+          <View style={styles.others}>
+            <Text style={styles.checkingText}>Transferring</Text>
+            <Scan />
+          </View>
+        )}
+        {currentProcess === "Checking1" && (
+          <View style={styles.others}>
+            <Text style={styles.checkingText}>Checking Molder 1:</Text>
+            <Scan />
+          </View>
+        )}
+        {currentProcess === "Checking2" && (
+          <View style={styles.others}>
+            <Text style={styles.checkingText}>Checking Molder 2:</Text>
+            <Scan />
+          </View>
+        )}
+        {currentProcess === "Checking" && (
+          <View style={styles.others}>
+            <Text style={styles.checkingText1}>Checking Molded</Text>
+            <Text style={styles.checkingText2}>Brick Quality</Text>
+            <Scan />
+          </View>
+        )}
         {currentProcess === "Finished" && (
           <View style={styles.others}>
             <Text style={styles.finishedText}>Process finished</Text>
@@ -405,6 +803,275 @@ const styles = StyleSheet.create({
     marginTop: statusBarHeight,
     alignItems: "center",
   },
+  // -------------------- MODAL -------------------- //
+  modalCenteredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    alignItems: "center",
+    // 280 is what percent of 728 = 38.46%
+    height: screenHeight * 0.3846,
+    // 280 is what percent of 360 = 77.78%
+    width: screenWidth * 0.7778,
+    backgroundColor: colors.offwhite,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalHeaderContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    // 56 is what percent of 280 = 20%
+    height: "20%",
+    width: "100%",
+    backgroundColor: colors.primary,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  modalBodyContainer: {
+    alignItems: "center",
+    // 224 is what percent of 280 = 80%
+    height: "80%",
+    width: "100%",
+    backgroundColor: colors.offwhite,
+    borderColor: colors.primary,
+    borderWidth: 1,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+  },
+
+  summaryModalContainer: {
+    alignItems: "center",
+    // 280 is what percent of 728 = 38.46%
+    height: screenHeight * 0.3846,
+    // 280 is what percent of 360 = 77.78%
+    width: screenWidth * 0.7778,
+    backgroundColor: colors.offwhite,
+    borderColor: colors.yellow,
+    borderWidth: 2,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  summaryIcon: {
+    marginTop: 16,
+  },
+  summaryTitle: {
+    alignItems: "center",
+    // 224 is what percent of 280 = 80%
+    width: "80%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+  },
+  summarySubtitle: {
+    alignItems: "center",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  summaryTitleText: {
+    fontFamily: "LatoBold",
+    fontSize: 20,
+    color: colors.primary,
+  },
+  summaryContent: {
+    alignItems: "center",
+    // 32 is what percent of 280 = 11.43%
+    height: "11.43%",
+    // 266 is what percent of 280 = 95%
+    width: "95%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 8,
+  },
+  summarySubTitleText: {
+    textAlign: "center",
+    fontFamily: "LatoRegular",
+    fontSize: 14,
+    color: colors.secondary,
+  },
+  summaryContentText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+  },
+  summaryButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    // 24 is what percent of 224 = 10.71%
+    height: "10.71%",
+    // 160 is what percent of 224 = 71.43%
+    width: "71.43%",
+    borderRadius: 4,
+    marginTop: 32,
+  },
+  summaryButtonText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.offwhite,
+  },
+
+  errorTitle: {
+    alignItems: "center",
+    // 224 is what percent of 280 = 80%
+    width: "80%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  errorTitleText: {
+    fontFamily: "LatoBold",
+    fontSize: 20,
+    color: colors.primary,
+  },
+  errorSubTitleText: {
+    textAlign: "center",
+    fontFamily: "LatoRegular",
+    fontSize: 12,
+    color: colors.secondary,
+    marginTop: 8,
+  },
+  errorContent: {
+    alignItems: "center",
+    // 56 is what percent of 280 = 20%
+    height: "20%",
+    // 266 is what percent of 280 = 95%
+    width: "95%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  errorContentText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+  },
+  errorButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    // 24 is what percent of 224 = 10.71%
+    height: "10.71%",
+    // 160 is what percent of 224 = 71.43%
+    width: "71.43%",
+    borderRadius: 4,
+    marginTop: 32,
+  },
+  errorButtonText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.offwhite,
+  },
+
+  alertTitle: {
+    alignItems: "center",
+    // 208 is what percent of 280 = 74.29%
+    width: "74.29%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  alertSubTitleText: {
+    textAlign: "center",
+    fontFamily: "LatoRegular",
+    fontSize: 12,
+    color: colors.secondary,
+    marginTop: 8,
+  },
+  alertTitleText: {
+    textAlign: "center",
+    fontFamily: "LatoBold",
+    fontSize: 20,
+    color: colors.primary,
+  },
+  alertContent: {
+    alignItems: "center",
+    // 32 is what percent of 280 = 11.43%
+    height: "11.43%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  alertContentText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+  },
+  alertButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    // 24 is what percent of 224 = 10.71%
+    height: "10.71%",
+    // 160 is what percent of 224 = 71.43%
+    width: "71.43%",
+    borderRadius: 4,
+    marginTop: 34,
+  },
+  alertButtonText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.offwhite,
+  },
+
+  informTitle: {
+    alignItems: "center",
+    // 208 is what percent of 280 = 74.29%
+    width: "74.29%",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 24,
+  },
+  informTitleText: {
+    textAlign: "center",
+    fontFamily: "LatoBold",
+    fontSize: 20,
+    color: colors.primary,
+  },
+  informContent: {
+    alignItems: "center",
+    // borderColor: colors.black50,
+    // borderWidth: 0.5,
+    marginTop: 32,
+  },
+  informContentText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+  },
+  informButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.primary,
+    // 24 is what percent of 224 = 10.71%
+    height: "10.71%",
+    // 160 is what percent of 224 = 71.43%
+    width: "71.43%",
+    borderRadius: 4,
+    marginTop: 40,
+  },
+  informButtonText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.offwhite,
+  },
+
   // -------------------- BANNER -------------------- //
   bannerContainer: {
     position: "relative",
@@ -579,8 +1246,19 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  manual: {
-    justifyContent: "space-evenly",
+  weatherNormalText: {
+    fontFamily: "LatoRegular",
+    fontSize: 13,
+    color: colors.black75,
+    marginTop: "4.17%",
+  },
+  weatherBigText: {
+    fontFamily: "LatoBold",
+    fontSize: 39,
+    color: colors.secondary,
+  },
+  start: {
+    // justifyContent: "space-evenly",
     alignItems: "center",
     // 96 is what percent of 200 = 48%
     height: "48%",
@@ -599,22 +1277,39 @@ const styles = StyleSheet.create({
     shadowRadius: 3.05,
     elevation: 4,
   },
-  weatherNormalText: {
-    fontFamily: "LatoRegular",
-    fontSize: 13,
-    color: colors.black75,
-    marginTop: "4.17%",
-  },
-  weatherBigText: {
-    fontFamily: "LatoBold",
-    fontSize: 39,
-    color: colors.secondary,
-  },
-  manualNormalText: {
+  startNormalText: {
     fontFamily: "LatoRegular",
     fontSize: 11,
     color: colors.black75,
-    marginTop: "4.17%",
+    marginTop: "8.33%",
+    marginBottom: "4.17%",
+  },
+  stop: {
+    // justifyContent: "space-evenly",
+    alignItems: "center",
+    // 96 is what percent of 200 = 48%
+    height: "48%",
+    // 112 is what percent of 112 = 100%
+    width: "100%",
+    borderWidth: 0.5,
+    backgroundColor: colors.white,
+    borderColor: colors.black5,
+    borderRadius: 16,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.17,
+    shadowRadius: 3.05,
+    elevation: 4,
+  },
+  stopNormalText: {
+    fontFamily: "LatoRegular",
+    fontSize: 11,
+    color: colors.black75,
+    marginTop: "8.33%",
+    marginBottom: "4.17%",
   },
   doubleArrowSmallIcon: {
     alignSelf: "flex-end",
@@ -748,6 +1443,34 @@ const styles = StyleSheet.create({
     width: 104,
     // 48 is what percent of 328 = 14.63%
     // marginRight: "14.63%",
+  },
+  checkingText: {
+    fontSize: 31,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+    marginBottom: 16,
+  },
+  checkingText1: {
+    fontSize: 25,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    // marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+    marginTop: 16,
+  },
+  checkingText2: {
+    fontSize: 25,
+    fontFamily: "LatoBold",
+    color: colors.secondary,
+    // 16 is what percent of 232 = 6.9%
+    // 8 is what percent of 232 = 3.45%
+    // marginTop: screenHeight >= 780 ? "6.9%" : "3.45%",
+    marginTop: 8,
+    marginBottom: 8,
   },
   finishedText: {
     fontSize: 31,
